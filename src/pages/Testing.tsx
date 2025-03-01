@@ -1,3 +1,4 @@
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import {
   Box,
   Divider,
@@ -12,11 +13,10 @@ import {
 } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import TextField from "@mui/material/TextField";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { useState } from "react";
 
 export default function Testing() {
-  const pages = [
+  const pagesData = [
     {
       name: "Алгоритмы",
       error: false,
@@ -33,18 +33,19 @@ export default function Testing() {
       questions: ["Лекции от Регистрова", "Семинары от Ассемблеровича"],
     },
   ];
+
   const [activeTab, setActiveTab] = useState(0);
   function onNextStep(i: number) {
     setActiveTab(i);
   }
   function onFabClick() {
-    setActiveTab(activeTab + 1 === pages.length ? 0 : activeTab + 1);
+    setActiveTab(activeTab + 1 === pagesData.length ? 0 : activeTab + 1);
   }
 
   return (
     <Box maxWidth="sm" marginX="auto">
       <Stepper sx={{ height: "auto" }} nonLinear activeStep={activeTab}>
-        {pages.map((v, i) => {
+        {pagesData.map((v, i) => {
           return (
             <Step key={i} completed={false}>
               <StepButton onClick={() => onNextStep(i)}>
@@ -54,7 +55,11 @@ export default function Testing() {
           );
         })}
       </Stepper>
-      <Page title={pages[activeTab].name} blocks={pages[activeTab].questions} />
+      {pagesData.map((v, i) => {
+        return (
+          <Page blocks={v.questions} title={v.name} active={activeTab === i} />
+        );
+      })}
       <Box sx={{ display: "flex", justifyContent: "right" }}>
         <Fab color="primary" onClick={onFabClick}>
           <ArrowForwardIcon />
@@ -64,9 +69,13 @@ export default function Testing() {
   );
 }
 
-function Page(props: { title: string; blocks: string[] }) {
+function Page(props: { active: boolean; title: string; blocks: string[] }) {
   return (
-    <Stack direction={"column"} gap={1}>
+    <Stack
+      direction={"column"}
+      gap={1}
+      sx={{ display: props.active ? undefined : "none" }}
+    >
       <Typography mb={1} variant="h4">
         {props.title}
       </Typography>
