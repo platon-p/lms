@@ -1,6 +1,6 @@
 import Auth from "./Auth";
 import Courses from "./Courses";
 import Testing from "./Testing";
-import Course from "./Course";
+import CoursePage from "./Course";
 
-export { Auth, Testing, Courses, Course };
+export { Auth, Testing, Courses, CoursePage as Course };
