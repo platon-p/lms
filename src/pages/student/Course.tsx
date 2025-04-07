@@ -1,4 +1,7 @@
-import { ArrowDropDown, Description, Quiz } from "@mui/icons-material";
+import { mockLoadCourse } from "@/data/mock";
+import { Chapter, Course, UnitHeader } from "@/domain/unit";
+import UnitIcon from "@/widgets/UnitIcon";
+import { ArrowDropDown } from "@mui/icons-material";
 import {
   Accordion,
   AccordionDetails,
@@ -15,8 +18,6 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import { mockLoadCourse } from "../data/mock";
-import { Chapter, Course, UnitHeader, UnitType } from "../domain/unit";
 
 function CourseSideBar(props: { chapters: Chapter[] }) {
   return (
@@ -127,7 +128,7 @@ function CourseContentView({ chapters, title }: Course) {
       <Typography variant="h4" padding={2}>
         {title}
       </Typography>
-      <Stack direction="column" spacing={1} >
+      <Stack direction="column" spacing={1}>
         {chapters.map((chapter, i) => (
           <ChapterView key={i} name={chapter.name} units={chapter.units} />
         ))}
@@ -155,7 +156,7 @@ function ChapterView(props: Chapter) {
 
 function ChapterSkeleton() {
   return (
-    <Stack direction="column" gap={1}>
+    <Stack direction="column" spacing={1}>
       <Skeleton variant="text" width="40%" height="2rem" />
       <Skeleton variant="rectangular" width="100%" height="3rem" />
       <Skeleton variant="rectangular" width="100%" height="3rem" />
@@ -167,24 +168,11 @@ function UnitListItem(props: UnitHeader) {
   return (
     <Stack
       direction="row"
-      gap={2}
+      spacing={2}
       sx={{ border: "1px solid #aaa", borderRadius: 2, padding: 2 }}
     >
       <UnitIcon type={props.type} />
       <Typography>{props.title}</Typography>
     </Stack>
   );
-}
-
-function UnitIcon(props: { type: UnitType | never }) {
-  switch (props.type) {
-    case "text":
-      return <Description />;
-    case "test":
-      return <Quiz />;
-    default:
-      // eslint-disable-next-line no-case-declarations
-      const check: never = props.type;
-      throw new Error(`Unknown unit type: ${check}`);
-  }
 }

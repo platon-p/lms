@@ -12,6 +12,11 @@ export interface Chapter {
 }
 
 export interface Course {
-    title: string;
-    chapters: Chapter[];
+  title: string;
+  chapters: Chapter[];
+}
+
+export interface CourseHeader {
+  title: string;
+  progress: number;
 }

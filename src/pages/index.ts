@@ -1,6 +1,7 @@
 import Auth from "./Auth";
-import Courses from "./Courses";
-import Testing from "./Testing";
-import CoursePage from "./Course";
+import { CoursePage, Courses, QualityAssessment } from "./student";
+import { UnitBuilderPage } from "./teacher";
 
-export { Auth, Testing, Courses, CoursePage as Course };
+export { Auth };
+export { QualityAssessment, Courses, CoursePage as Course };
+export { UnitBuilderPage };

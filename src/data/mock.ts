@@ -1,4 +1,4 @@
-import { Chapter, Course } from "../domain/unit";
+import { Chapter, Course, CourseHeader } from "../domain/unit";
 
 export function mockLoadCourse(): Promise<Course> {
   return new Promise((resolve) =>
@@ -12,6 +12,50 @@ export function mockLoadCourse(): Promise<Course> {
         ],
       }));
       resolve({ chapters, title: "Алгоритмы и структуры данных-2" });
+    }, 1000)
+  );
+}
+
+export interface QualityAssessmentPageHeader {
+  name: string;
+  questions: string[];
+}
+
+export function mockQualityAssessmentPages(): Promise<
+  QualityAssessmentPageHeader[]
+> {
+  return new Promise((resolve) =>
+    setTimeout(() => {
+      const pages: QualityAssessmentPageHeader[] = [
+        {
+          name: "Алгоритмы",
+          questions: ["Лекции от Сиплюсплюсова", "Семинары от Эрбэтришного"],
+        },
+        {
+          name: "Теорвер",
+          questions: ["Лекции от Гауссова", "Семинары от Чебышева"],
+        },
+        {
+          name: "Операционные системы",
+          questions: ["Лекции от Регистрова", "Семинары от Ассемблеровича"],
+        },
+      ];
+      resolve(pages);
+    }, 1000)
+  );
+}
+
+export function mockLoadCourses(): Promise<CourseHeader[]> {
+  return new Promise((resolve) =>
+    setTimeout(() => {
+      const courses: CourseHeader[] = [
+        {progress: 20, title: "Алгоритмы и структуры данных-2"},
+        {progress: 50, title: "Теория вероятностей"},
+        {progress: 80, title: "Операционные системы"},
+        {progress: 100, title: "Групповая динамика"},
+        {progress: 0, title: "Архитектура вычислительных систем"},
+      ];
+      resolve(courses);
     }, 1000)
   );
 }

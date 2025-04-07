@@ -1,3 +1,5 @@
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import {
   Button,
   Container,
@@ -7,15 +9,13 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import Visibility from "@mui/icons-material/Visibility";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { useState } from "react";
 
 export default function Auth() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   return (
     <Container maxWidth="sm" sx={{ marginTop: "20vh" }}>
-      <Stack direction="column" gap={2}>
+      <Stack direction="column" spacing={2}>
         <Typography variant="h4" align="center">
           Заголовок
         </Typography>
