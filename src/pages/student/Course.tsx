@@ -1,5 +1,5 @@
 import { mockLoadCourse } from "@/data/mock";
-import { Chapter, Course, UnitHeader } from "@/domain/unit";
+import { Chapter, Course, UnitHeader } from "@/domain/course";
 import UnitIcon from "@/widgets/UnitIcon";
 import { ArrowDropDown } from "@mui/icons-material";
 import {
@@ -17,7 +17,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 
 function CourseSideBar(props: { chapters: Chapter[] }) {
   return (
@@ -165,11 +165,23 @@ function ChapterSkeleton() {
 }
 
 function UnitListItem(props: UnitHeader) {
+  const navigate = useNavigate();
+  const goToTest = () => {
+    if (props.type === "test") {
+      navigate(`./${props.id}`);
+    }
+  };
   return (
     <Stack
       direction="row"
       spacing={2}
-      sx={{ border: "1px solid #aaa", borderRadius: 2, padding: 2 }}
+      sx={{
+        border: "1px solid #aaa",
+        borderRadius: 2,
+        padding: 2,
+        cursor: "pointer",
+      }}
+      onClick={goToTest}
     >
       <UnitIcon type={props.type} />
       <Typography>{props.title}</Typography>

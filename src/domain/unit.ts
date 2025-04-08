@@ -1,22 +1,21 @@
-export type UnitType = "text" | "test";
+import { RichQuestion } from "./test";
 
-export interface UnitHeader {
-  id: string;
+type UnitType = "text" | "test";
+
+interface TestUnitInfo {
+  type: "test";
   title: string;
-  type: UnitType;
+  deadline?: Date;
+  questions?: RichQuestion[];
+  status: "not-started" | "in-progress" | "finished";
 }
 
-export interface Chapter {
-  name: string;
-  units: UnitHeader[];
-}
-
-export interface Course {
+interface TextUnitInfo {
+  type: "text";
   title: string;
-  chapters: Chapter[];
+  content: string;
 }
 
-export interface CourseHeader {
-  title: string;
-  progress: number;
-}
+type UnitInfo = TextUnitInfo | TestUnitInfo;
+
+export type { UnitInfo, UnitType, TestUnitInfo, TextUnitInfo };

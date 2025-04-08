@@ -1,6 +1,18 @@
-import { QuestionBuilder, QuestionType } from "@/widgets/questions";
-import { CheckBox, RadioButtonChecked, TextFields } from "@mui/icons-material";
-import { Button, Stack, TextField } from "@mui/material";
+import { QuestionType } from "@/domain/test";
+import { QuestionBuilder } from "@/widgets/questions";
+import {
+  CheckBox,
+  Close,
+  RadioButtonChecked,
+  TextFields,
+} from "@mui/icons-material";
+import {
+  Button,
+  IconButton,
+  Stack,
+  TextField,
+  ToggleButton,
+} from "@mui/material";
 import { useState } from "react";
 
 export function UnitBuilderPage() {
@@ -57,8 +69,16 @@ export function UnitBuilderPage() {
 }
 
 function UnitControls(props: { onAdd: (type: QuestionType) => void }) {
+  const [selectionDisabled, setSelectionDisabled] = useState(false);
+  const [deadlineValue, setDeadlineValue] = useState<string>("");
   return (
-    <Stack direction="row" spacing={2}>
+    <Stack
+      direction="row"
+      gap={2}
+      flexWrap="wrap"
+      rowGap={2}
+      justifyContent="center"
+    >
       <Button
         endIcon={<CheckBox />}
         onClick={() => props.onAdd("checkbox")}
@@ -81,6 +101,34 @@ function UnitControls(props: { onAdd: (type: QuestionType) => void }) {
         текстовый ответ
       </Button>
       <Button variant="contained">Сохранить</Button>
+      <ToggleButton
+        selected={selectionDisabled}
+        value="selection"
+        onClick={() => setSelectionDisabled(!selectionDisabled)}
+      >
+        Запретить выделение
+      </ToggleButton>
+      <TextField
+        value={deadlineValue}
+        onChange={(e) => {
+          console.log(e.target.value);
+          setDeadlineValue(e.target.value);
+        }}
+        type="datetime-local"
+        placeholder="Дедлайн"
+        slotProps={{
+          input: {
+            endAdornment: (
+              <IconButton
+                onClick={() => setDeadlineValue("")}
+                disabled={!deadlineValue}
+              >
+                <Close />
+              </IconButton>
+            ),
+          },
+        }}
+      />
     </Stack>
   );
 }

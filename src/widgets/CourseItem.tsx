@@ -1,4 +1,4 @@
-import { CourseHeader } from "@/domain/unit";
+import { CourseHeader } from "@/domain/course";
 import {
   Card,
   CardActionArea,

@@ -8,6 +8,7 @@ import {
 import { ThemeProvider } from "@emotion/react";
 import { createTheme } from "@mui/material";
 import { BrowserRouter, Route, Routes } from "react-router";
+import Unit from "./pages/student/Unit/Unit";
 
 const theme = createTheme({
   typography: {
@@ -27,6 +28,7 @@ export function App() {
             <Route path="testing" element={<QualityAssessment />} />
             <Route path="courses" element={<Courses />} />
             <Route path="course/:id" element={<Course />} />
+            <Route path="course/:id/:unitId" element={<Unit />} />
           </Route>
           <Route path="admin">
             <Route path="text-unit" element={<UnitBuilderPage />} />

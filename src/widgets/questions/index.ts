@@ -1,7 +1,6 @@
 import { CheckboxQuestion } from "./Checkbox";
+import { QuestionBuilder } from "./QuestionBuilder";
 import { RadioQuestion } from "./RadioQuestion";
 import { TextQuestion } from "./TextQuestion";
-import { QuestionBuilder, QuestionType } from "./QuestionBuilder";
 
 export { CheckboxQuestion, RadioQuestion, TextQuestion, QuestionBuilder };
-export type { QuestionType };

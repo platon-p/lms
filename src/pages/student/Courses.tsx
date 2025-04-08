@@ -1,5 +1,5 @@
 import { mockLoadCourses } from "@/data/mock";
-import { CourseHeader } from "@/domain/unit";
+import { CourseHeader } from "@/domain/course";
 import { CourseItem, CourseItemSkeleton } from "@/widgets/CourseItem";
 import {
   Stack,
