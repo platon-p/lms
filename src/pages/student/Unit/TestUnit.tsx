@@ -5,11 +5,7 @@ import { Box, Button, Stack, Typography } from "@mui/material";
 
 export default function TestUnit({ unit }: { unit: TestUnitInfo }) {
   return (
-    <Stack
-      direction="column"
-      spacing={2}
-      sx={{ maxWidth: "sm", mx: "auto", px: 2 }}
-    >
+    <Stack direction="column" spacing={2} sx={{ maxWidth: "md", mx: "auto" }}>
       {unit.status === "not-started" && <TestNotStarted unit={unit} />}
       {unit.status === "in-progress" && (
         <>

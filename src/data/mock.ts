@@ -45,7 +45,7 @@ export function mockQualityAssessmentPages(): Promise<
         questions: ["Лекции от Регистрова", "Семинары от Ассемблеровича"],
       },
     ],
-    1000
+    1000,
   );
 }
 
@@ -58,7 +58,7 @@ export function mockLoadCourses(): Promise<CourseHeader[]> {
       { progress: 100, title: "Групповая динамика" },
       { progress: 0, title: "Архитектура вычислительных систем" },
     ],
-    1000
+    1000,
   );
 }
 
@@ -82,6 +82,6 @@ export function mockLoadUnit(): Promise<UnitInfo> {
         { type: "text", title: "Напишите любое слово" },
       ],
     },
-    0
+    0,
   );
 }

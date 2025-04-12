@@ -3,12 +3,17 @@ import {
   Course,
   Courses,
   QualityAssessment,
+  Unit,
   UnitBuilderPage,
 } from "@/pages";
 import { ThemeProvider } from "@emotion/react";
+import {
+  ThemeProvider as GravityThemeProvider,
+  ToasterProvider,
+} from "@gravity-ui/uikit";
+import { toaster } from "@gravity-ui/uikit/toaster-singleton";
 import { createTheme } from "@mui/material";
 import { BrowserRouter, Route, Routes } from "react-router";
-import Unit from "./pages/student/Unit/Unit";
 
 const theme = createTheme({
   typography: {
@@ -21,20 +26,24 @@ const theme = createTheme({
 export function App() {
   return (
     <ThemeProvider theme={theme}>
-      <BrowserRouter>
-        <Routes>
-          <Route path="auth" element={<Auth />} />
-          <Route path="/">
-            <Route path="testing" element={<QualityAssessment />} />
-            <Route path="courses" element={<Courses />} />
-            <Route path="course/:id" element={<Course />} />
-            <Route path="course/:id/:unitId" element={<Unit />} />
-          </Route>
-          <Route path="admin">
-            <Route path="text-unit" element={<UnitBuilderPage />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
+      <GravityThemeProvider theme="light">
+        <ToasterProvider toaster={toaster}>
+          <BrowserRouter>
+            <Routes>
+              <Route path="auth" element={<Auth />} />
+              <Route path="/">
+                <Route path="testing" element={<QualityAssessment />} />
+                <Route path="courses" element={<Courses />} />
+                <Route path="course/:id" element={<Course />} />
+                <Route path="course/:id/:unitId" element={<Unit />} />
+              </Route>
+              <Route path="admin">
+                <Route path="text-unit" element={<UnitBuilderPage />} />
+              </Route>
+            </Routes>
+          </BrowserRouter>
+        </ToasterProvider>
+      </GravityThemeProvider>
     </ThemeProvider>
   );
 }

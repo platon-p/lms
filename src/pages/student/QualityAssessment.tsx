@@ -22,7 +22,7 @@ export default function QualityAssessment() {
         v.map((v) => ({
           ...v,
           error: false,
-        }))
+        })),
       );
     });
   }, []);

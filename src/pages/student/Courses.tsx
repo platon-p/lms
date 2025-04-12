@@ -1,12 +1,7 @@
 import { mockLoadCourses } from "@/data/mock";
 import { CourseHeader } from "@/domain/course";
 import { CourseItem, CourseItemSkeleton } from "@/widgets/CourseItem";
-import {
-  Stack,
-  TablePagination,
-  TextField,
-  Typography
-} from "@mui/material";
+import { Stack, TablePagination, TextField, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { useEffect, useState } from "react";
 
@@ -30,17 +25,17 @@ export default function Courses() {
         spacing={2}
         sx={{ backgroundColor: "#f0f0f0" }}
       >
-        {cards ? (
-          cards.map((v, i) => (
-            <Grid key={i} size={{ xs: 12, sm: 4 }}>
-              <CourseItem title={v.title} progress={v.progress} />
-            </Grid>
-          ))
-        ) : (
-          Array.from({length: 8}).map(() => <Grid size={{ xs: 12, sm: 4 }}>
-            <CourseItemSkeleton />
-          </Grid>
-        ))}
+        {cards
+          ? cards.map((v, i) => (
+              <Grid key={i} size={{ xs: 12, sm: 4 }}>
+                <CourseItem title={v.title} progress={v.progress} />
+              </Grid>
+            ))
+          : Array.from({ length: 8 }).map(() => (
+              <Grid size={{ xs: 12, sm: 4 }}>
+                <CourseItemSkeleton />
+              </Grid>
+            ))}
       </Grid>
       <TablePagination
         count={count}

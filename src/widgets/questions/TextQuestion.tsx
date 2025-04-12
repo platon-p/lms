@@ -1,10 +1,10 @@
 import { Stack, TextField } from "@mui/material";
-import { AdvancedInput } from "../../components/AdvancedInput";
+import { YfmEditor } from "../../components/md/YfmEditor";
 
 export function TextQuestion() {
   return (
-    <Stack direction="column" spacing={2} sx={{width: "100%"}}>
-      <AdvancedInput label="Текст задания" />
+    <Stack direction="column" spacing={2} sx={{ width: "100%" }}>
+      <YfmEditor label="Текст задания" />
       <TextField
         fullWidth
         label="Правильные ответы"

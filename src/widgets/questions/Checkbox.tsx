@@ -1,4 +1,4 @@
-import { AdvancedInput } from "@/components";
+import { YfmEditor } from "@/components";
 import { Close } from "@mui/icons-material";
 import { Button, Checkbox, IconButton, Stack, TextField } from "@mui/material";
 import { useState } from "react";
@@ -30,7 +30,7 @@ export function CheckboxQuestion() {
   };
   return (
     <Stack direction="column" spacing={2} sx={{ width: "100%" }}>
-      <AdvancedInput label="Текст задания" />
+      <YfmEditor label="Текст задания" />
       <Stack direction="column" spacing={2}>
         {state.map((v, i) => (
           <CheckboxRow

@@ -1,48 +1,29 @@
 import { mockLoadCourse } from "@/data/mock";
 import { Chapter, Course, UnitHeader } from "@/domain/course";
+import {
+  CourseSideBar,
+  CourseSideBarSkeleton,
+} from "@/layout/student/CourseSideBar";
 import UnitIcon from "@/widgets/UnitIcon";
 import { ArrowDropDown } from "@mui/icons-material";
 import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Box,
+  Button,
   Divider,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemText,
   Paper,
   Skeleton,
   Stack,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 
-function CourseSideBar(props: { chapters: Chapter[] }) {
-  return (
-    <List
-      sx={{
-        width: "100%",
-        maxHeight: "100vh",
-        overflow: "scroll",
-      }}
-    >
-      <ListItem>
-        <Typography variant="h6">Содержание</Typography>
-      </ListItem>
-      {props.chapters.map((chapter, i) => (
-        <ListItem disablePadding key={i}>
-          <ListItemButton LinkComponent={"a"} href={`#${i}`}>
-            <ListItemText primary={chapter.name} secondary="asd" />
-          </ListItemButton>
-        </ListItem>
-      ))}
-    </List>
-  );
-}
-
 export default function CoursePage() {
+  const lessSm = useMediaQuery((theme) => theme.breakpoints.down("sm"));
   const { id } = useParams();
   const [course, setCourse] = useState<Course | undefined>();
   useEffect(() => {
@@ -60,52 +41,27 @@ export default function CoursePage() {
         marginTop: 2,
       }}
     >
-      <Paper
-        elevation={2}
+      <Box
         sx={{
-          minWidth: "10rem",
-          width: "30%",
+          display: lessSm ? "none" : undefined,
           position: "sticky",
           alignSelf: "start",
           top: 0,
         }}
       >
-        {course ? (
-          <CourseSideBar chapters={course.chapters} />
+        {course && course.chapters ? (
+          <CourseSideBar chapters={course.chapters} selectedId={1} />
         ) : (
           <CourseSideBarSkeleton />
         )}
-      </Paper>
+      </Box>
       <Stack
         component={(props) => <Paper {...props} elevation={2} />}
-        sx={{ width: "85%", padding: 2, height: "100%" }}
+        sx={{ width: "100%", padding: 2, height: "100%" }}
       >
         {course ? <CourseContentView {...course} /> : <CourseContentSkeleton />}
       </Stack>
     </Stack>
-  );
-}
-
-function CourseSideBarSkeleton() {
-  return (
-    <List
-      sx={{
-        width: "100%",
-        maxHeight: "100vh",
-        overflow: "scroll",
-      }}
-    >
-      <ListItem>
-        <Typography variant="h6">Содержание</Typography>
-      </ListItem>
-      {Array.from({ length: 8 }).map(() => (
-        <ListItem disablePadding>
-          <ListItemButton>
-            <ListItemText primary={<Skeleton width="70%" height="1.5rem" />} />
-          </ListItemButton>
-        </ListItem>
-      ))}
-    </List>
   );
 }
 
@@ -172,19 +128,14 @@ function UnitListItem(props: UnitHeader) {
     }
   };
   return (
-    <Stack
-      direction="row"
-      spacing={2}
-      sx={{
-        border: "1px solid #aaa",
-        borderRadius: 2,
-        padding: 2,
-        cursor: "pointer",
-      }}
+    <Button
       onClick={goToTest}
+      variant="outlined"
+      size="large"
+      sx={{justifyContent: "start", gap: 1, textTransform: "none"}}
+      startIcon={<UnitIcon type={props.type} />}
     >
-      <UnitIcon type={props.type} />
       <Typography>{props.title}</Typography>
-    </Stack>
+    </Button>
   );
 }

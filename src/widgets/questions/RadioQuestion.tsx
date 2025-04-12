@@ -8,7 +8,7 @@ import {
   TextField,
 } from "@mui/material";
 import { useState } from "react";
-import { AdvancedInput } from "../../components/AdvancedInput";
+import { YfmEditor } from "../../components/md/YfmEditor";
 
 export function RadioQuestion() {
   const [active, setActive] = useState<number | undefined>(undefined);
@@ -32,7 +32,7 @@ export function RadioQuestion() {
 
   return (
     <Stack direction="column" spacing={2} sx={{ width: "100%" }}>
-      <AdvancedInput label="Текст задания" />
+      <YfmEditor label="Текст задания" />
       <RadioGroup onChange={(_, value) => setActive(Number(value))}>
         <Stack direction="column" spacing={2}>
           {texts.map((v, i) => (

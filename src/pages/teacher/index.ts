@@ -1,3 +1,3 @@
 import { UnitBuilderPage } from "./UnitBuilder";
 
-export { UnitBuilderPage}
+export { UnitBuilderPage };
