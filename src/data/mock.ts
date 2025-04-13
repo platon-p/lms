@@ -19,7 +19,7 @@ export function mockLoadCourse(): Promise<Course> {
       { id: "789", type: "test", title: "Тест" },
     ],
   }));
-  return sleepAndReturn({ chapters, title: title }, 1000);
+  return sleepAndReturn({ chapters, title: title }, 10000);
 }
 
 export interface QualityAssessmentPageHeader {
@@ -52,11 +52,11 @@ export function mockQualityAssessmentPages(): Promise<
 export function mockLoadCourses(): Promise<CourseHeader[]> {
   return sleepAndReturn(
     [
-      { progress: 20, title: "Алгоритмы и структуры данных-2" },
-      { progress: 50, title: "Теория вероятностей" },
-      { progress: 80, title: "Операционные системы" },
-      { progress: 100, title: "Групповая динамика" },
-      { progress: 0, title: "Архитектура вычислительных систем" },
+      { id: "alogs", progress: 20, title: "Алгоритмы и структуры данных-2" },
+      { id: "teorver", progress: 50, title: "Теория вероятностей" },
+      { id: "os", progress: 80, title: "Операционные системы" },
+      { id: "group", progress: 100, title: "Групповая динамика" },
+      { id: "avs", progress: 0, title: "Архитектура вычислительных систем" },
     ],
     1000,
   );

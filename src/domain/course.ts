@@ -6,6 +6,7 @@ interface Chapter {
 }
 
 interface CourseHeader {
+  id: string;
   title: string;
   progress: number;
 }

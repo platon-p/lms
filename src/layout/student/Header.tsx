@@ -1,35 +1,15 @@
-import { Menu } from "@mui/icons-material";
-import { Drawer, IconButton, Paper, Stack, Typography } from "@mui/material";
-import { useState } from "react";
-import { CourseSideBarSkeleton } from "./CourseSideBar";
+import { Stack, Toolbar, Typography } from "@mui/material";
+import { ReactNode } from "react";
 
-export default function Header() {
-  const [open, setOpen] = useState(false);
-  const onMenuClick = () => {
-    setOpen(true);
-  };
-  const backdropClick = () => {
-    setOpen(false);
-  };
+export default function Header(props: {
+  children: ReactNode;
+}) {
   return (
-    <Paper elevation={2} sx={{ p: 2 }}>
-      <Drawer
-        open={open}
-        sx={{ zIndex: 999 }}
-        onClick={backdropClick}
-        PaperProps={{
-          elevation: 0,
-          sx: { width: "18rem" },
-        }}
-      >
-        <CourseSideBarSkeleton paperOff />
-      </Drawer>
-      <Stack direction="row" alignItems="center" gap={1}>
-        <IconButton onClick={onMenuClick}>
-          <Menu />
-        </IconButton>
-        <Typography variant="h5">asds</Typography>
+    <Toolbar>
+      <Stack direction="row" gap={2} alignItems="center">
+        {props.children}
+        <Typography variant="h5">header data</Typography>
       </Stack>
-    </Paper>
+    </Toolbar>
   );
 }

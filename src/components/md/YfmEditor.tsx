@@ -9,7 +9,7 @@ import "@gravity-ui/uikit/styles/styles.css";
 import { Box } from "@mui/material";
 import { getEditorConfig } from "./mdPreferences";
 
-export function YfmEditor(props: { label?: string }) {
+export function YfmEditor(props: { label?: string; className?: string }) {
   const wtcfg = [...wysiwygToolbarConfigs.wToolbarConfig];
   wtcfg.push([wMathListItem]);
 
@@ -37,7 +37,7 @@ export function YfmEditor(props: { label?: string }) {
         wysiwygToolbarConfig={wtcfg}
         stickyToolbar
         editor={editor}
-        className="md-editor"
+        className={(props.className || "") + " md-editor"}
       />
     </Box>
   );

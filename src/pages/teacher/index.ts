@@ -1,3 +1,4 @@
-import { UnitBuilderPage } from "./UnitBuilder";
+import { TestUnitBuilderPage } from "./TestBuilder";
+import { TextUnitBuilderPage } from "./TextBuilder";
 
-export { UnitBuilderPage };
+export { TextUnitBuilderPage, TestUnitBuilderPage };

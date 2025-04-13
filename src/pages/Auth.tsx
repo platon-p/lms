@@ -43,7 +43,12 @@ export default function Auth() {
         />
         <Stack direction="row" justifyContent="space-between">
           <Button>Поддержка</Button>
-          <Button variant="contained" onClick={() => setError("неверный логин или пароль")}>Продолжить</Button>
+          <Button
+            variant="contained"
+            onClick={() => setError("неверный логин или пароль")}
+          >
+            Продолжить
+          </Button>
         </Stack>
       </Stack>
     </Container>

@@ -1,4 +1,5 @@
 import { QuestionType } from "@/domain/test";
+import { useTestBuilderStore } from "@/store/unitBuilder";
 import { QuestionBuilder } from "@/widgets/questions";
 import {
   CheckBox,
@@ -7,64 +8,33 @@ import {
   TextFields,
 } from "@mui/icons-material";
 import {
+  Breadcrumbs,
   Button,
+  Container,
   IconButton,
   Stack,
   TextField,
   ToggleButton,
+  Typography,
 } from "@mui/material";
 import { useState } from "react";
 
-export function UnitBuilderPage() {
-  const [questions, setQuestions] = useState<QuestionType[]>([
-    "text",
-    "checkbox",
-  ]);
-  const handleAdd = (type: QuestionType) => {
-    setQuestions((prev) => [...prev, type]);
-  };
-  const handleDelete = (id: number) => {
-    setQuestions((prev) => prev.filter((_, index) => index !== id));
-  };
-  const handleMoveUp = (id: number) => {
-    const newQuestions = [...questions];
-    if (id === 0) return;
-    setQuestions([
-      ...newQuestions.slice(0, id - 1),
-      newQuestions[id],
-      newQuestions[id - 1],
-      ...newQuestions.slice(id + 1),
-    ]);
-  };
-  const handleMoveDown = (id: number) => {
-    const newQuestions = [...questions];
-    if (id === questions.length - 1) return;
-    setQuestions([
-      ...newQuestions.slice(0, id),
-      newQuestions[id + 1],
-      newQuestions[id],
-      ...newQuestions.slice(id + 2),
-    ]);
-  };
+export function TestUnitBuilderPage() {
+  const { questions, onAdd } = useTestBuilderStore();
   return (
-    <Stack
-      direction="column"
-      spacing={2}
-      alignItems="center"
-      margin="auto"
-      sx={{ maxWidth: "md", width: "100%" }}
-    >
-      <TextField fullWidth label="Название элемента" />
-      {questions.map((question, index) => (
-        <QuestionBuilder
-          type={question}
-          onDelete={() => handleDelete(index)}
-          onMoveUp={() => handleMoveUp(index)}
-          onMoveDown={() => handleMoveDown(index)}
-        />
-      ))}
-      <UnitControls onAdd={handleAdd} />
-    </Stack>
+    <Container maxWidth="md">
+      <Stack direction="column" spacing={2}>
+        <Breadcrumbs>
+          <Typography>Курсы</Typography>
+          <Typography>Алгоритмы</Typography>
+        </Breadcrumbs>
+        <TextField fullWidth label="Название элемента" />
+        {questions.map((question, index) => (
+          <QuestionBuilder type={question} index={index} />
+        ))}
+        <UnitControls onAdd={onAdd} />
+      </Stack>
+    </Container>
   );
 }
 
@@ -100,7 +70,9 @@ function UnitControls(props: { onAdd: (type: QuestionType) => void }) {
       >
         текстовый ответ
       </Button>
-      <Button variant="contained">Сохранить</Button>
+      <Button variant="outlined" color="warning">
+        развёрнутый ответ
+      </Button>
       <ToggleButton
         selected={selectionDisabled}
         value="selection"
@@ -129,6 +101,7 @@ function UnitControls(props: { onAdd: (type: QuestionType) => void }) {
           },
         }}
       />
+      <Button variant="contained">Сохранить</Button>
     </Stack>
   );
 }

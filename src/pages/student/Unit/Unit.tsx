@@ -1,14 +1,13 @@
 import { mockLoadCourse, mockLoadUnit } from "@/data/mock";
 import { Chapter } from "@/domain/course";
-import { TextUnitInfo, UnitInfo } from "@/domain/unit";
-import Course from "@/layout/student/Course";
-import { useMediaQuery } from "@mui/material";
-import { useEffect, useState } from "react";
-import TestUnit from "./TestUnit";
+import { UnitInfo } from "@/domain/unit";
+import CourseLayout from "@/layout/student/Course";
+import { ReactNode, useEffect, useState } from "react";
+
+import TestUnit from "./Test";
+import TextUnit from "./Text";
 
 export default function Unit() {
-  const lessSm = useMediaQuery((theme) => theme.breakpoints.down("sm"));
-
   const [unit, setUnit] = useState<UnitInfo | undefined>();
   const [chapters, setChapters] = useState<Chapter[]>();
   useEffect(() => {
@@ -20,15 +19,8 @@ export default function Unit() {
   if (!unit) {
     return "loading";
   }
-  let component;
-  if (unit.type === "text") {
-    component = <TextUnitView unit={unit} />;
-  }
-  if (unit.type === "test") {
-    component = <TestUnit unit={unit} />;
-  }
   return (
-    <Course
+    <CourseLayout
       sideBarProps={
         chapters && {
           chapters: chapters,
@@ -36,11 +28,15 @@ export default function Unit() {
         }
       }
     >
-      {component}
-    </Course>
+      <UnitView unit={unit} />
+    </CourseLayout>
   );
 }
 
-function TextUnitView(_: { unit: TextUnitInfo }) {
-  return "Text";
+function UnitView({ unit }: { unit: UnitInfo }): ReactNode {
+  if (unit.type === "text") {
+    return <TextUnit unit={unit} />;
+  } else if (unit.type === "test") {
+    return <TestUnit unit={unit} />;
+  }
 }

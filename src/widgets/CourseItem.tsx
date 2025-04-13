@@ -8,11 +8,16 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import { useNavigate } from "react-router";
 
 export function CourseItem(props: CourseHeader) {
+  const navigate = useNavigate();
+  const navCourse = () => {
+    navigate(`../course/${props.id}`);
+  };
   return (
     <Card>
-      <CardActionArea>
+      <CardActionArea onClick={navCourse}>
         <CardContent>
           <Stack height={70} direction="column" justifyContent="space-between">
             <Typography variant="subtitle1">{props.title}</Typography>
@@ -25,5 +30,5 @@ export function CourseItem(props: CourseHeader) {
 }
 
 export function CourseItemSkeleton() {
-  return <Skeleton height={70} variant="rounded" />;
+  return <Skeleton height={100} variant="rounded" />;
 }

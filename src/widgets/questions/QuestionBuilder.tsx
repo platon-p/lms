@@ -4,6 +4,7 @@ import { IconButton, Paper, Stack } from "@mui/material";
 import { CheckboxQuestion } from "./Checkbox";
 import { RadioQuestion } from "./RadioQuestion";
 import { TextQuestion } from "./TextQuestion";
+import { useTestBuilderStore } from "@/store/unitBuilder";
 
 const components: Record<QuestionType, React.FC> = {
   text: TextQuestion,
@@ -11,12 +12,7 @@ const components: Record<QuestionType, React.FC> = {
   radio: RadioQuestion,
 };
 
-export function QuestionBuilder(props: {
-  type: QuestionType;
-  onDelete: () => void;
-  onMoveUp: () => void;
-  onMoveDown: () => void;
-}) {
+export function QuestionBuilder(props: { type: QuestionType; index: number }) {
   const Component = components[props.type];
   return (
     <Paper elevation={4} sx={{ width: "100%" }}>
@@ -24,29 +20,22 @@ export function QuestionBuilder(props: {
         direction="row"
         width="100%"
         spacing={2}
-        padding={2}
+        p={2}
         boxSizing="border-box"
       >
-        <QuestionControls
-          onDelete={props.onDelete}
-          onMoveDown={props.onMoveDown}
-          onMoveUp={props.onMoveUp}
-        />
+        <QuestionControls index={props.index} />
         <Component />
       </Stack>
     </Paper>
   );
 }
 
-function QuestionControls(props: {
-  onMoveUp: () => void;
-  onMoveDown: () => void;
-  onDelete: () => void;
-}) {
+function QuestionControls({ index }: { index: number }) {
+  const { onDelete, onMoveDown, onMoveUp } = useTestBuilderStore();
   return (
     <Stack direction="column">
       <IconButton
-        onClick={() => props.onMoveUp()}
+        onClick={() => onMoveUp(index)}
         sx={{
           "&:hover": {
             color: "primary.main",
@@ -56,7 +45,7 @@ function QuestionControls(props: {
         <ArrowDropUp />
       </IconButton>
       <IconButton
-        onClick={() => props.onMoveDown()}
+        onClick={() => onMoveDown(index)}
         sx={{
           "&:hover": {
             color: "primary.main",
@@ -66,7 +55,7 @@ function QuestionControls(props: {
         <ArrowDropDown />
       </IconButton>
       <IconButton
-        onClick={() => props.onDelete()}
+        onClick={() => onDelete(index)}
         sx={{
           "&:hover": {
             color: "error.main",

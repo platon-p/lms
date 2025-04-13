@@ -28,7 +28,7 @@ export default function Courses() {
         {cards
           ? cards.map((v, i) => (
               <Grid key={i} size={{ xs: 12, sm: 4 }}>
-                <CourseItem title={v.title} progress={v.progress} />
+                <CourseItem id={v.id} title={v.title} progress={v.progress} />
               </Grid>
             ))
           : Array.from({ length: 8 }).map(() => (

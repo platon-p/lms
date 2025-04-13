@@ -7,7 +7,6 @@ import {
   ListItem,
   ListItemButton,
   ListItemText,
-  Paper,
   Skeleton,
   Typography,
 } from "@mui/material";
@@ -20,31 +19,22 @@ export interface CourseSideBarProps {
 
 export function CourseSideBar(props: CourseSideBarProps) {
   return (
-    <Paper
-      elevation={2}
+    <List
       sx={{
-        width: "14rem",
+        width: "100%",
+        height: "100%",
+        overflow: "scroll",
+        boxSizing: "border-box",
       }}
     >
-      <List
-        sx={{
-          width: "100%",
-          maxHeight: "100vh",
-          overflow: "scroll",
-        }}
-      >
-        <ListItem>
-          <Typography variant="h6">Содержание</Typography>
-        </ListItem>
+      <ListItem>
+        <Typography variant="h6">Содержание</Typography>
+      </ListItem>
 
-        {props.chapters.map((chapter, i) => (
-          <ChapterListItem
-            chapter={chapter}
-            selected={i === props.selectedId}
-          />
-        ))}
-      </List>
-    </Paper>
+      {props.chapters.map((chapter, i) => (
+        <ChapterListItem chapter={chapter} selected={i === props.selectedId} />
+      ))}
+    </List>
   );
 }
 
@@ -87,8 +77,8 @@ function ChapterListItem({
   );
 }
 
-export function CourseSideBarSkeleton(props: { paperOff?: boolean }) {
-  const content = (
+export function CourseSideBarSkeleton() {
+  return (
     <List
       sx={{
         maxHeight: "100%",
@@ -99,18 +89,13 @@ export function CourseSideBarSkeleton(props: { paperOff?: boolean }) {
       <ListItem>
         <Typography variant="h6">Содержание</Typography>
       </ListItem>
-      {Array.from({ length: 8 }).map(() => (
+      {Array.from({ length: 20 }).map(() => (
         <ListItem disablePadding>
           <ListItemButton>
-            <ListItemText primary={<Skeleton width="70%" height="1.5rem" />} />
+            <ListItemText primary={<Skeleton variant="text" width="70%" />} />
           </ListItemButton>
         </ListItem>
       ))}
     </List>
   );
-  if (props.paperOff) {
-    return content;
-  }
-  return <Paper elevation={2} sx={{ width: "14rem" }}>{content}</Paper>
-  
 }

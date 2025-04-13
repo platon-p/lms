@@ -1,29 +1,24 @@
 import { mockLoadCourse } from "@/data/mock";
 import { Chapter, Course, UnitHeader } from "@/domain/course";
-import {
-  CourseSideBar,
-  CourseSideBarSkeleton,
-} from "@/layout/student/CourseSideBar";
+import { default as CourseLayout } from "@/layout/student/Course";
 import UnitIcon from "@/widgets/UnitIcon";
 import { ArrowDropDown } from "@mui/icons-material";
 import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
-  Box,
   Button,
+  Container,
   Divider,
   Paper,
   Skeleton,
   Stack,
   Typography,
-  useMediaQuery,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 
 export default function CoursePage() {
-  const lessSm = useMediaQuery((theme) => theme.breakpoints.down("sm"));
   const { id } = useParams();
   const [course, setCourse] = useState<Course | undefined>();
   useEffect(() => {
@@ -31,45 +26,37 @@ export default function CoursePage() {
   }, [id]);
 
   return (
-    <Stack
-      direction="row"
-      spacing={2}
-      sx={{
-        maxWidth: "lg",
-        justifyContent: "center",
-        marginX: "auto",
-        marginTop: 2,
-      }}
+    <CourseLayout
+      sideBarProps={
+        course?.chapters && { chapters: course.chapters, selectedId: 0 }
+      }
     >
-      <Box
-        sx={{
-          display: lessSm ? "none" : undefined,
-          position: "sticky",
-          alignSelf: "start",
-          top: 0,
-        }}
-      >
-        {course && course.chapters ? (
-          <CourseSideBar chapters={course.chapters} selectedId={1} />
-        ) : (
-          <CourseSideBarSkeleton />
-        )}
-      </Box>
-      <Stack
-        component={(props) => <Paper {...props} elevation={2} />}
-        sx={{ width: "100%", padding: 2, height: "100%" }}
-      >
-        {course ? <CourseContentView {...course} /> : <CourseContentSkeleton />}
-      </Stack>
-    </Stack>
+      <Container maxWidth="md">
+        <Paper elevation={2}>
+          {course ? (
+            <CourseContentView {...course} />
+          ) : (
+            <CourseContentSkeleton />
+          )}
+        </Paper>
+      </Container>
+    </CourseLayout>
   );
 }
 
 function CourseContentSkeleton() {
   return (
-    <Stack direction="column" spacing={4}>
-      <Skeleton variant="text" width="80%" height="3rem" />
-      <Stack direction="column" spacing={2} divider={<Divider />}>
+    <Stack direction="column">
+      <Typography p={2}>
+        <Skeleton
+          variant="text"
+          width="80%"
+          sx={{
+            fontSize: (theme) => theme.typography.h4.fontSize,
+          }}
+        />
+      </Typography>
+      <Stack direction="column" aria-busy gap={2} p={2} divider={<Divider />}>
         {Array.from({ length: 5 }).map(() => (
           <ChapterSkeleton />
         ))}
@@ -80,8 +67,8 @@ function CourseContentSkeleton() {
 
 function CourseContentView({ chapters, title }: Course) {
   return (
-    <Stack>
-      <Typography variant="h4" padding={2}>
+    <Stack direction="column">
+      <Typography variant="h4" p={2}>
         {title}
       </Typography>
       <Stack direction="column" spacing={1}>
@@ -132,7 +119,7 @@ function UnitListItem(props: UnitHeader) {
       onClick={goToTest}
       variant="outlined"
       size="large"
-      sx={{justifyContent: "start", gap: 1, textTransform: "none"}}
+      sx={{ justifyContent: "start", gap: 1, textTransform: "none" }}
       startIcon={<UnitIcon type={props.type} />}
     >
       <Typography>{props.title}</Typography>

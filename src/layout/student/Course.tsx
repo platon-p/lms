@@ -1,5 +1,15 @@
-import { Box, Stack, useMediaQuery } from "@mui/material";
-import { ReactNode } from "react";
+import { Close, Menu } from "@mui/icons-material";
+import {
+  AppBar,
+  Box,
+  ClickAwayListener,
+  Drawer,
+  IconButton,
+  Toolbar,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
+import { ReactNode, useState } from "react";
 import {
   CourseSideBar,
   CourseSideBarProps,
@@ -7,32 +17,63 @@ import {
 } from "./CourseSideBar";
 import Header from "./Header";
 
-export default function Course(props: {
+export default function CourseLayout(props: {
   sideBarProps?: CourseSideBarProps;
   children: ReactNode;
 }) {
-  const lessSm = useMediaQuery((theme) => theme.breakpoints.down("sm"));
+  const lessSm = useMediaQuery((theme) => theme.breakpoints.down("md"));
 
+  const [open, setOpen] = useState(false);
+  const backdropClick = () => {
+    setOpen(false);
+  };
+  const sideBar = props.sideBarProps ? (
+    <CourseSideBar {...props.sideBarProps} />
+  ) : (
+    <CourseSideBarSkeleton />
+  );
+  const toggleSideBar = () => {
+    if (lessSm) {
+      setOpen(!open);
+    }
+  };
+  const w = useTheme().spacing(35);
   return (
-    <Stack direction="column" gap={2}>
-      <Header />
-      <Stack direction="row" gap={2} sx={{ minWidth: "sm" }}>
-        <Box
+    <Box sx={{ display: "flex" }}>
+      <AppBar
+        position="fixed"
+        sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
+      >
+        <Header>
+          {lessSm && (
+            <IconButton color="inherit" onClick={toggleSideBar}>
+              {open ? <Close /> : <Menu />}
+            </IconButton>
+          )}
+        </Header>
+      </AppBar>
+      <ClickAwayListener onClickAway={() => backdropClick}>
+        <Drawer
+          onClose={() => setOpen(false)}
+          open={open}
+          variant={lessSm ? "temporary" : "permanent"}
           sx={{
-            position: "sticky",
-            alignSelf: "start",
-            top: 0,
-            display: lessSm ? "none" : undefined,
+            width: !lessSm ? w : 0,
+          }}
+          PaperProps={{
+            sx: {
+              width: w,
+            },
           }}
         >
-          {props.sideBarProps ? (
-            <CourseSideBar {...props.sideBarProps} />
-          ) : (
-            <CourseSideBarSkeleton />
-          )}
-        </Box>
-        <Box sx={{ width: "100%" }}>{props.children}</Box>
-      </Stack>
-    </Stack>
+          <Toolbar />
+          {sideBar}
+        </Drawer>
+      </ClickAwayListener>
+      <Box component="main" sx={{ flexGrow: 1, paddingTop: 2 }}>
+        <Toolbar />
+        {props.children}
+      </Box>
+    </Box>
   );
 }
