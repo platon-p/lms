@@ -18,4 +18,4 @@ interface TextUnitInfo {
 
 type UnitInfo = TextUnitInfo | TestUnitInfo;
 
-export type { UnitInfo, UnitType, TestUnitInfo, TextUnitInfo };
+export type { TestUnitInfo, TextUnitInfo, UnitInfo, UnitType };

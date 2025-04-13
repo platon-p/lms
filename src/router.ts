@@ -4,10 +4,12 @@ import {
   Course,
   Courses,
   QualityAssessment,
+  TeacherCourse,
   TestUnitBuilderPage,
   TextUnitBuilderPage,
   Unit,
 } from "./pages";
+import { UnitReview } from "./pages/teacher";
 
 export const routes = createBrowserRouter([
   { path: "auth", Component: Auth },
@@ -31,8 +33,10 @@ export const routes = createBrowserRouter([
       {
         path: "course/:id",
         children: [
+          { index: true, Component: TeacherCourse },
+          { path: "review/:unitId", Component: UnitReview },
           {
-            path: "unit-builder",
+            path: "builder",
             children: [
               { path: "test", Component: TestUnitBuilderPage },
               { path: "text", Component: TextUnitBuilderPage },
