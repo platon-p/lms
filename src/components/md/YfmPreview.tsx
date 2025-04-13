@@ -11,13 +11,13 @@ function getTransformConfig(): TransformOptions {
   return {
     plugins: [
       ...transformDefaultPlugins,
-      latexTransform({ bundle: false, validate: true }),
+      latexTransform({ bundle: false, validate: true, runtime: "latex" }),
     ],
   };
 }
 
 const config = getTransformConfig();
-const YfmViewer = withLatex({ runtime: "" })(YfmStaticView);
+const YfmViewer = withLatex({ runtime: "latex" })(YfmStaticView);
 
 export function YfmPreview(props: { value: string }) {
   const [html, setHtml] = useState<string>("");
