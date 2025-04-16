@@ -1,11 +1,20 @@
 import { mockLoadCourses } from "@/data/mock";
 import { CourseHeader } from "@/domain/course";
 import { CourseItem, CourseItemSkeleton } from "@/widgets/CourseItem";
-import { Stack, TablePagination, TextField, Typography } from "@mui/material";
+import {
+  Badge,
+  Card,
+  CardActionArea,
+  CardContent,
+  Stack,
+  TablePagination,
+  TextField,
+  Typography,
+} from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { useEffect, useState } from "react";
 
-export default function Courses() {
+export default function StudentMain() {
   const [cards, setCards] = useState<CourseHeader[] | undefined>();
   const [page, setPage] = useState(0);
   const count = 41;
@@ -17,6 +26,20 @@ export default function Courses() {
 
   return (
     <Stack direction="column" maxWidth="md" marginX="auto" spacing={1}>
+      <Badge
+        badgeContent={1}
+        color="primary"
+        sx={{ width: "fit-content", marginTop: "1rem !important" }}
+      >
+        <Typography sx={{ display: "inline-block" }} variant="h4" pr={1}>
+          СОПы
+        </Typography>
+      </Badge>
+      <Card>
+        <CardActionArea onClick={console.log}>
+          <CardContent>Весенний период СОП</CardContent>
+        </CardActionArea>
+      </Card>
       <Typography variant="h4">Курсы</Typography>
       <TextField fullWidth placeholder="Искать" />
       <Grid

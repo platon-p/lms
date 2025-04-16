@@ -1,10 +1,10 @@
 import { QuestionType } from "@/domain/test";
+import { useTestBuilderStore } from "@/store/unitBuilder";
 import { ArrowDropDown, ArrowDropUp, Delete } from "@mui/icons-material";
-import { IconButton, Paper, Stack } from "@mui/material";
+import { Button, ButtonGroup, Paper, Stack } from "@mui/material";
 import { CheckboxQuestion } from "./Checkbox";
 import { RadioQuestion } from "./RadioQuestion";
 import { TextQuestion } from "./TextQuestion";
-import { useTestBuilderStore } from "@/store/unitBuilder";
 
 const components: Record<QuestionType, React.FC> = {
   text: TextQuestion,
@@ -33,37 +33,16 @@ export function QuestionBuilder(props: { type: QuestionType; index: number }) {
 function QuestionControls({ index }: { index: number }) {
   const { onDelete, onMoveDown, onMoveUp } = useTestBuilderStore();
   return (
-    <Stack direction="column">
-      <IconButton
-        onClick={() => onMoveUp(index)}
-        sx={{
-          "&:hover": {
-            color: "primary.main",
-          },
-        }}
-      >
+    <ButtonGroup orientation="vertical" variant="outlined">
+      <Button onClick={() => onMoveUp(index)}>
         <ArrowDropUp />
-      </IconButton>
-      <IconButton
-        onClick={() => onMoveDown(index)}
-        sx={{
-          "&:hover": {
-            color: "primary.main",
-          },
-        }}
-      >
+      </Button>
+      <Button onClick={() => onMoveDown(index)}>
         <ArrowDropDown />
-      </IconButton>
-      <IconButton
-        onClick={() => onDelete(index)}
-        sx={{
-          "&:hover": {
-            color: "error.main",
-          },
-        }}
-      >
+      </Button>
+      <Button onClick={() => onDelete(index)} color="error">
         <Delete />
-      </IconButton>
-    </Stack>
+      </Button>
+    </ButtonGroup>
   );
 }

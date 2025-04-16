@@ -1,6 +1,6 @@
 import CoursePage from "./Course";
-import Courses from "./Courses";
+import StudentMain from "./Main";
 import QualityAssessment from "./QualityAssessment";
 import Unit from "./Unit";
 
-export { CoursePage, Courses, QualityAssessment, Unit };
+export { CoursePage, QualityAssessment, StudentMain, Unit };

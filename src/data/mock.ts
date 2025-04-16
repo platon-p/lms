@@ -1,4 +1,5 @@
 import { Chapter, Course, CourseHeader } from "@/domain/course";
+import { QAWaveHeader } from "@/domain/qa";
 import { TestUnitInfo, TextUnitInfo, UnitInfo, UnitType } from "../domain/unit";
 
 function sleepAndReturn<T>(data: T, duraion: number): Promise<T> {
@@ -87,4 +88,18 @@ export function mockLoadUnit(type: UnitType = "test"): Promise<UnitInfo> {
     content: "# header\n> asdasd",
   } as TextUnitInfo;
   return sleepAndReturn(type == "test" ? testUnit : textUnit, 0);
+}
+
+export function mockLoadQAWaves(): Promise<QAWaveHeader[]> {
+  return sleepAndReturn(
+    [
+      { id: "1", title: "19 октября 2024 - 28 октября 2024", status: "done" },
+      {
+        id: "2",
+        title: "21 декабря 2024 - 29 декабря 2024",
+        status: "in-progress",
+      },
+    ],
+    1000
+  );
 }

@@ -1,6 +1,6 @@
 import { mockLoadUnit } from "@/data/mock";
 import { TestUnitInfo, UnitInfo } from "@/domain/unit";
-import { ArrowDropDown } from "@mui/icons-material";
+import ArrowDropDown from "@mui/icons-material/ArrowDropDown";
 import {
   Accordion,
   AccordionDetails,
@@ -10,7 +10,6 @@ import {
   Chip,
   ChipOwnProps,
   Container,
-  Stack,
   Table,
   TableBody,
   TableCell,
@@ -18,7 +17,6 @@ import {
   TableHead,
   TableRow,
   TextField,
-  Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 
@@ -104,11 +102,13 @@ function StudentsReport() {
 
 function Student(props: { name: string }) {
   return (
-    <Stack direction="row" alignItems="center" gap={1}>
-      <Avatar sx={{ width: 24, height: 24 }}>
-        {props.name.substring(0, 1)}
-      </Avatar>
-      <Typography>{props.name}</Typography>
-    </Stack>
+    <Chip
+      avatar={
+        <Avatar sx={{ width: 24, height: 24 }}>
+          {props.name.substring(0, 1)}
+        </Avatar>
+      }
+      label={props.name}
+    />
   );
 }
