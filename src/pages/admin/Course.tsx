@@ -1,17 +1,17 @@
-import { mockLoadQAWaves } from "@/data/mock";
+import { adminApi } from "@/api/admin";
 import { QAWaveHeader } from "@/domain/qa";
-import AdminSideBar from "@/layout/admin/SideBar";
-import { AccessTime, Done, Edit } from "@mui/icons-material";
+import TeacherChip from "@/widgets/TeacherChip";
+import AccessTime from "@mui/icons-material/AccessTime";
+import Done from "@mui/icons-material/Done";
+import Edit from "@mui/icons-material/Edit";
 import {
   Autocomplete,
-  Avatar,
   Badge,
   Card,
   CardActionArea,
   CardContent,
   Chip,
   Container,
-  Drawer,
   Grid2,
   IconButton,
   Skeleton,
@@ -25,51 +25,32 @@ import { useEffect, useState } from "react";
 
 export default function AdminCourse() {
   const title = "Алгоритмы";
-  const allStudents = [
-    "Иванов Иван",
-    "Петров Пётр",
-    "asdasd",
-    "ddd",
-    "dasdasd",
-  ];
   const teacher = "Преподбек Училович";
-  const [completionValue, setCompletionValue] = useState<string | null>();
-  const [inputValue, setInputValue] = useState("");
 
   return (
-    <Stack direction="row">
-      <Drawer
-        variant="permanent"
-        PaperProps={{ sx: { width: "20rem" } }}
-        sx={{ width: "20rem" }}
-      >
-        <AdminSideBar />
-      </Drawer>
-      <Container maxWidth="md">
+    <Container maxWidth="md">
+      <Stack gap={2} py={2}>
         <Stack
           direction="row"
           gap={2}
           alignItems="center"
-          py={2}
           justifyContent="space-between"
         >
-          <Stack direction="row" gap={2}>
-            <Typography
-              sx={{
-                px: 1,
-                mx: -1,
-                cursor: "pointer",
-                transitionDuration: "200ms",
-                "&:hover": { backgroundColor: "#f2f2f2", borderRadius: "4px" },
-              }}
-              variant="h4"
-            >
-              {title}
-            </Typography>
-          </Stack>
+          <Typography
+            sx={{
+              px: 1,
+              mx: -1,
+              cursor: "pointer",
+              transitionDuration: "200ms",
+              "&:hover": { backgroundColor: "#f0f0f0", borderRadius: "4px" },
+            }}
+            variant="h3"
+          >
+            {title}
+          </Typography>
           <Stack direction="row" gap={2} alignItems="center">
             <Tooltip title="Преподаватель курса">
-              <Chip label={teacher} avatar={<Avatar>A</Avatar>} />
+              <TeacherChip name={teacher} />
             </Tooltip>
             <IconButton>
               <Edit />
@@ -77,40 +58,69 @@ export default function AdminCourse() {
           </Stack>
         </Stack>
         <Typography variant="h4">Студенты</Typography>
-        <Autocomplete
-          slotProps={{
-            chip: {
-              avatar: <Avatar>asdsa</Avatar>,
-            },
-          }}
-          multiple
-          autoHighlight
-          inputValue={inputValue}
-          onInputChange={(e, v) => setInputValue(v)}
-          // value={completionValue}
-          onChange={(e, v) => {
-            // if (!v) return;
-            // addStudent(v);
-            // setCompletionValue(null);
-            // setTimeout(() => {
-            //   setInputValue("");
-            // });
-          }}
-          renderInput={(params) => <TextField {...params} label="Search" />}
-          options={allStudents}
-        />
-
+        <StudentsEditableList />
         <Typography variant="h4">Результаты СОП</Typography>
         <QAWaves />
-      </Container>
-    </Stack>
+      </Stack>
+    </Container>
+  );
+}
+
+function StudentsEditableList() {
+  /** @deprecated */
+  const allStudents = [
+    "Иванов Иван",
+    "Петров Пётр",
+    "asdasd",
+    "ddd",
+    "dasdasd",
+  ]; // TODO: migrate -> adminApi
+
+  const [completionValue, setCompletionValue] = useState<string | null>();
+  const [inputValue, setInputValue] = useState("");
+
+  const [students, setStudents] = useState(allStudents);
+  const addStudent = (name: string) => {
+    if (students.includes(name)) return;
+    setStudents([...students, name]);
+  };
+
+  return (
+    <Card>
+      <CardContent>
+        <Stack gap={2}>
+          {/* FIXME: */}
+          <Autocomplete
+            autoHighlight
+            inputValue={inputValue}
+            onInputChange={(e, v) => setInputValue(v)}
+            value={completionValue}
+            onChange={(e, v) => {
+              if (!v) return;
+              addStudent(v);
+              setTimeout(() => {
+                setInputValue("");
+                setCompletionValue(null);
+              });
+            }}
+            renderInput={(params) => <TextField {...params} label="Студент" />}
+            options={allStudents}
+          />
+          <Stack direction="row" gap={2} sx={{ flexWrap: "wrap", rowGap: 1 }}>
+            {students.map((v) => (
+              <Chip label={v} onDelete={() => {}} />
+            ))}
+          </Stack>
+        </Stack>
+      </CardContent>
+    </Card>
   );
 }
 
 function QAWaves() {
   const [qaWaves, setQAWaves] = useState<QAWaveHeader[] | undefined>();
   useEffect(() => {
-    mockLoadQAWaves().then(setQAWaves);
+    adminApi.getQaWaves().then(setQAWaves);
   }, []);
   const item = (wave: QAWaveHeader) => {
     return <QAWaveItem {...wave} />;
@@ -148,7 +158,7 @@ function QAWaveItem(props: QAWaveHeader) {
 }
 
 function QAWaveItemSkeleton() {
-  const s = useTheme().typography.pxToRem(24);
+  const s = useTheme().spacing(4);
   return (
     <Card>
       <CardActionArea>

@@ -3,7 +3,8 @@ import {
   UseMarkdownEditorProps,
 } from "@gravity-ui/markdown-editor";
 import { Math } from "@gravity-ui/markdown-editor/extensions/additional/Math/index.js";
-import { YfmPreview } from "./YfmPreview";
+import YfmPreview from "./YfmPreview";
+
 export const Runtimes = {
   latex: "latex",
 };

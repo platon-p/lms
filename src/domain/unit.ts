@@ -1,21 +1,24 @@
-import { RichQuestion } from "./test";
+import { RichTask } from "./quiz";
 
-type UnitType = "text" | "test";
+export type QuizStatus =
+  | "not-started"
+  | "in-progress"
+  | "reviewing"
+  | "finished";
 
-interface TestUnitInfo {
-  type: "test";
+export type QuizUnitInfo = {
+  type: "quiz";
   title: string;
+  status: QuizStatus;
   deadline?: Date;
-  questions?: RichQuestion[];
-  status: "not-started" | "in-progress" | "finished";
-}
+  tasks?: RichTask[];
+};
 
-interface TextUnitInfo {
-  type: "text";
+export interface ArticleUnitInfo {
+  type: "article";
   title: string;
   content: string;
 }
 
-type UnitInfo = TextUnitInfo | TestUnitInfo;
-
-export type { TestUnitInfo, TextUnitInfo, UnitInfo, UnitType };
+export type UnitInfo = QuizUnitInfo | ArticleUnitInfo;
+export type UnitType = UnitInfo["type"];

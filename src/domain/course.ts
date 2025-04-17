@@ -8,11 +8,11 @@ interface Chapter {
 interface CourseHeader {
   id: string;
   title: string;
-  progress: number;
 }
 
 interface Course {
   title: string;
+  teacher: string;
   chapters: Chapter[];
 }
 
@@ -22,4 +22,4 @@ interface UnitHeader {
   type: UnitType;
 }
 
-export type { Course, Chapter, UnitHeader, CourseHeader };
+export type { Chapter, Course, CourseHeader, UnitHeader };

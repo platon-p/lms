@@ -1,6 +1,7 @@
+import { CardsShowcase } from "@/layout/common/CardsShowcase";
+import { CourseItem } from "@/widgets";
 import {
-  Card,
-  CardContent,
+  Button,
   Container,
   Grid2 as Grid,
   Stack,
@@ -10,33 +11,21 @@ import {
 
 export default function CreateQAWave() {
   return (
-    <Container maxWidth="lg" sx={{ backgroundColor: "#f0f0f0" }}>
+    <Container maxWidth="lg">
       <Stack direction="column" gap={2}>
         <Typography variant="h4">Создать волну СОП</Typography>
         <QAWaveCreateControls />
-        <TextField label="название курса" />
-        <Grid container spacing={2}>
-          <CourseItem />
-          <CourseItem />
-          <CourseItem />
-          <CourseItem />
-          <CourseItem />
-          <CourseItem />
-          <CourseItem />
-        </Grid>
+        <Typography variant="h4">Курсы</Typography>
+        <TextField fullWidth label="Название курса" />
+        <CardsShowcase
+          size={{ xs: 6, md: 4, lg: 3 }}
+          cards={[<CourseItem {...{ id: "", title: "asd" }} />]}
+        />
+        <Stack direction="row" justifyContent="end">
+          <Button variant="contained">Создать</Button>
+        </Stack>
       </Stack>
     </Container>
-  );
-}
-
-function CourseItem() {
-  return (
-    <Grid size={{ xs: 6, md: 4, lg: 3 }}>
-      <Card>
-        <CardContent>asdad</CardContent>
-      </Card>
-      {/* <CourseItemSkeleton /> */}
-    </Grid>
   );
 }
 
@@ -44,12 +33,12 @@ function QAWaveCreateControls() {
   return (
     <Grid container spacing={2}>
       <Grid size={6}>
-        <TextField label="название волны" required fullWidth />
+        <TextField label="Название волны" required fullWidth />
       </Grid>
       <Grid size={3}>
         <TextField
           required
-          label="начало"
+          label="Начало"
           slotProps={{ inputLabel: { shrink: true } }}
           type="date"
           fullWidth
@@ -59,7 +48,7 @@ function QAWaveCreateControls() {
         <TextField
           required
           fullWidth
-          label="конец"
+          label="Конец"
           type="date"
           slotProps={{ inputLabel: { shrink: true } }}
         />

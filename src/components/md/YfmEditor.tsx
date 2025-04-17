@@ -5,11 +5,13 @@ import {
   wMathListItem,
   wysiwygToolbarConfigs,
 } from "@gravity-ui/markdown-editor";
-import "@gravity-ui/uikit/styles/styles.css";
 import { Box } from "@mui/material";
 import { getEditorConfig } from "./mdPreferences";
 
-export function YfmEditor(props: { label?: string; className?: string }) {
+export default function YfmEditor(props: {
+  label?: string;
+  className?: string;
+}) {
   const wtcfg = [...wysiwygToolbarConfigs.wToolbarConfig];
   wtcfg.push([wMathListItem]);
 
@@ -17,18 +19,19 @@ export function YfmEditor(props: { label?: string; className?: string }) {
   return (
     <Box
       sx={{
+        width: "100%",
         "& .md-editor": {
+          padding: 1,
+          boxSizing: "border-box",
+          minHeight: "10rem",
           border: "1px solid #ccc",
           borderRadius: "4px",
-          minHeight: "10rem",
-          boxSizing: "border-box",
-          padding: 1,
+          transitionDuration: "100ms",
         },
         "& .md-editor:hover": {
           border: "1px solid #888",
         },
         "& .md-editor:focus-within": {
-          border: "2px solid",
           borderColor: (theme) => theme.palette.primary.main,
         },
       }}

@@ -1,15 +1,25 @@
-import { Stack, Toolbar, Typography } from "@mui/material";
+import {
+  Button,
+  Container,
+  ContainerProps,
+  Toolbar,
+  Typography,
+} from "@mui/material";
 import { ReactNode } from "react";
 
 export default function Header(props: {
-  children: ReactNode;
+  maxWidth?: ContainerProps["maxWidth"];
+  children?: ReactNode;
 }) {
   return (
-    <Toolbar>
-      <Stack direction="row" gap={2} alignItems="center">
+    <Container maxWidth={props.maxWidth} disableGutters>
+      <Toolbar>
         {props.children}
-        <Typography variant="h5">header data</Typography>
-      </Stack>
-    </Toolbar>
+        <Typography component="div" sx={{ flexGrow: 1 }} variant="h5">
+          LMS
+        </Typography>
+        <Button color="inherit">выйти</Button>
+      </Toolbar>
+    </Container>
   );
 }

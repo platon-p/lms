@@ -1,64 +1,20 @@
-import { createBrowserRouter } from "react-router";
-import {
-  AdminCourse,
-  Auth,
-  Course,
-  CreateQAWave,
-  QAWaveReview,
-  QualityAssessment,
-  StudentMain,
-  TeacherCourse,
-  TestUnitBuilderPage,
-  TextUnitBuilderPage,
-  Unit,
-} from "./pages";
-import { AdminMain } from "./pages/admin";
+import { createBrowserRouter, RouteObject } from "react-router";
+import { adminRoutes } from "./pages/admin/routes";
+import Auth from "./pages/Auth";
 import QAReview from "./pages/QAReview";
-import { UnitReview } from "./pages/teacher";
+import { studentRoutes } from "./pages/student/routes";
+import { teacherRoutes } from "./pages/teacher/routes";
 
-export const routes = createBrowserRouter([
+const routes: RouteObject[] = [
   { path: "auth", Component: Auth },
-  {
-    path: "admin",
-    children: [
-      { index: true, Component: AdminMain },
-      { path: "course/:id", Component: AdminCourse },
-      { path: "qa/create", Component: CreateQAWave },
-      { path: "qa/:id", Component: QAWaveReview },
-    ],
-  },
-  { path: "qa", children: [{ path: ":id", Component: QAReview }] },
+  { path: "qa", children: [{ path: ":qaWaveId", Component: QAReview }] },
+  { path: "admin", children: adminRoutes },
   {
     path: "student",
-    children: [
-      { index: true, Component: StudentMain },
-      { path: "testing", Component: QualityAssessment },
-      {
-        path: "course/:id",
-        children: [
-          { index: true, Component: Course },
-          { path: ":unitId", Component: Unit },
-        ],
-      },
-    ],
+    children: studentRoutes,
+    // Component: () => ProtectedRoute({ children: Outlet({}) }),
   },
-  {
-    path: "teacher",
-    children: [
-      {
-        path: "course/:id",
-        children: [
-          { index: true, Component: TeacherCourse },
-          { path: "review/:unitId", Component: UnitReview },
-          {
-            path: "builder",
-            children: [
-              { path: "test", Component: TestUnitBuilderPage },
-              { path: "text", Component: TextUnitBuilderPage },
-            ],
-          },
-        ],
-      },
-    ],
-  },
-]);
+  { path: "teacher", children: teacherRoutes },
+];
+
+export const router = createBrowserRouter(routes);

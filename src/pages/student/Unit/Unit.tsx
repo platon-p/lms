@@ -1,42 +1,43 @@
-import { mockLoadCourse, mockLoadUnit } from "@/data/mock";
-import { Chapter } from "@/domain/course";
-import { UnitInfo } from "@/domain/unit";
 import CourseLayout from "@/layout/student/Course";
-import { ReactNode, useEffect, useState } from "react";
 
-import TestUnit from "./Test";
-import TextUnit from "./Text";
+import { useUnit } from "@/store/unit";
+import { CircularProgress, Stack, Toolbar } from "@mui/material";
+import { useNavigate, useParams } from "react-router";
+import ArticleUnit from "./Article";
+import QuizUnit from "./Quiz";
 
 export default function Unit() {
-  const [unit, setUnit] = useState<UnitInfo | undefined>();
-  const [chapters, setChapters] = useState<Chapter[]>();
-  useEffect(() => {
-    mockLoadUnit().then(setUnit);
-    mockLoadCourse().then((v) => {
-      setChapters(v.chapters);
-    });
-  }, []);
-  if (!unit) {
-    return "loading";
-  }
+  const { courseId, unitId } = useParams();
+  const unit = useUnit(courseId!, unitId!)!;
+
+  const view = () => {
+    if (!unit) {
+      return undefined;
+    }
+
+    switch (unit.type) {
+      case "article":
+        return <ArticleUnit unit={unit} />;
+      case "quiz":
+        return <QuizUnit unit={unit} />;
+    }
+  };
+
+  const navigate = useNavigate();
+  const onUnitClick = (unitId: string) => {
+    navigate(`../${unitId}`);
+  };
+
   return (
-    <CourseLayout
-      sideBarProps={
-        chapters && {
-          chapters: chapters,
-          selectedId: 1,
-        }
-      }
-    >
-      <UnitView unit={unit} />
+    <CourseLayout courseId={courseId!} onUnitClick={onUnitClick}>
+      {unit ? (
+        view()
+      ) : (
+        <Stack direction="row" justifyContent="center">
+          <Toolbar />
+          <CircularProgress />
+        </Stack>
+      )}
     </CourseLayout>
   );
-}
-
-function UnitView({ unit }: { unit: UnitInfo }): ReactNode {
-  if (unit.type === "text") {
-    return <TextUnit unit={unit} />;
-  } else if (unit.type === "test") {
-    return <TestUnit unit={unit} />;
-  }
 }

@@ -3,25 +3,23 @@ import {
   Card,
   CardActionArea,
   CardContent,
-  LinearProgress,
   Skeleton,
   Stack,
   Typography,
 } from "@mui/material";
 import { useNavigate } from "react-router";
 
-export function CourseItem(props: CourseHeader) {
+export default function CourseItem(props: CourseHeader) {
   const navigate = useNavigate();
   const navCourse = () => {
-    navigate(`../course/${props.id}`);
+    navigate(`./course/${props.id}`);
   };
   return (
     <Card>
       <CardActionArea onClick={navCourse}>
         <CardContent>
-          <Stack height={70} direction="column" justifyContent="space-between">
+          <Stack height={60} direction="column" justifyContent="space-between">
             <Typography variant="subtitle1">{props.title}</Typography>
-            <LinearProgress variant="determinate" value={props.progress} />
           </Stack>
         </CardContent>
       </CardActionArea>

@@ -1,3 +1,4 @@
+import { useAuthStore } from "@/store/user";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import {
@@ -15,6 +16,11 @@ import { useState } from "react";
 export default function Auth() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [error, setError] = useState<string | undefined>(undefined);
+  const { signIn } = useAuthStore();
+  const onClick = () => {
+    setError("неверный логин или пароль");
+    signIn();
+  };
 
   return (
     <Container maxWidth="sm" sx={{ marginTop: "20vh" }}>
@@ -43,10 +49,7 @@ export default function Auth() {
         />
         <Stack direction="row" justifyContent="space-between">
           <Button>Поддержка</Button>
-          <Button
-            variant="contained"
-            onClick={() => setError("неверный логин или пароль")}
-          >
+          <Button variant="contained" onClick={onClick}>
             Продолжить
           </Button>
         </Stack>

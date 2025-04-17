@@ -1,13 +1,16 @@
-import { RichQuestion } from "@/domain/test";
-import { Card, CardContent, Typography } from "@mui/material";
-import AnswerField from "./test/AnswerField";
+import { YfmPreview } from "@/components";
+import { RichTask } from "@/domain/quiz";
+import TaskInputBody from "@/widgets/task/input/TaskInputBody";
+import { Card, CardContent, Stack } from "@mui/material";
 
-export default function QuestionBlock(props: { question: RichQuestion }) {
+export default function QuestionBlock({ task }: { task: RichTask }) {
   return (
     <Card>
       <CardContent>
-        <Typography variant="h5">{props.question.title}</Typography>
-        <AnswerField question={props.question} />
+        <Stack direction="column" gap={2}>
+          <YfmPreview value={task.title} />
+          <TaskInputBody task={task} />
+        </Stack>
       </CardContent>
     </Card>
   );

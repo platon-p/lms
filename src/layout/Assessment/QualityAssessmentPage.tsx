@@ -1,24 +1,48 @@
-import { Divider, Skeleton, Stack, Typography } from "@mui/material";
-import { ClassesAssessment } from "./ClassesAssessment";
+import { criterias, useQAStore } from "@/store/qa";
+import TeacherChip from "@/widgets/TeacherChip";
+import {
+  Box,
+  Divider,
+  Grid2 as Grid,
+  Skeleton,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
+import { RatingRow } from "./ClassesAssessment";
 
-export function QualityAssessmentPage(props: {
-  active: boolean;
-  title: string;
-  blocks: string[];
-}) {
+export function QualityAssessmentPage(props: { index: number }) {
+  const { pages, activeIndex } = useQAStore();
+  const { name, teacher, remark, setRemark } = pages[props.index]();
+  const isActive = activeIndex == props.index;
+
   return (
     <Stack
       direction={"column"}
       spacing={1}
-      sx={{ display: props.active ? undefined : "none" }}
+      sx={{ display: isActive ? undefined : "none" }}
     >
-      <Typography mb={1} variant="h4">
-        {props.title}
-      </Typography>
+      <Typography variant="h4">{name}</Typography>
+      <Box>
+        <TeacherChip name={teacher} />
+      </Box>
       <Stack direction="column" divider={<Divider />} spacing={2}>
-        {props.blocks.map((v, i) => (
-          <ClassesAssessment question={v} key={i} />
-        ))}
+        <Box>
+          <Typography variant="h6">Оцените качество курса</Typography>
+          <TextField
+            value={remark}
+            onChange={(e) => setRemark(e.target.value)}
+            multiline
+            fullWidth
+            minRows={3}
+            placeholder="Напишите отзыв"
+          />
+          <Grid container>
+            {criterias.map((v) => (
+              <RatingRow question={v} pageId={props.index} />
+            ))}
+          </Grid>
+        </Box>
       </Stack>
     </Stack>
   );
@@ -26,13 +50,26 @@ export function QualityAssessmentPage(props: {
 
 export function QualityAssessmentPageSkeleton() {
   return (
-    <Stack direction="column" divider={<Divider />} spacing={2}>
-      {Array.from({ length: 3 }).map(() => (
-        <Stack direction="column" spacing={0}>
-          <Skeleton width="30%" height="3rem" />
-          <Skeleton variant="rounded" width="100%" height="12rem" />
-        </Stack>
-      ))}
+    <Stack direction="column">
+      <Skeleton
+        variant="text"
+        width="50%"
+        sx={{ fontSize: (t) => t.typography.h4 }}
+      />
+      <Stack direction="column" divider={<Divider />} spacing={2}>
+        {Array.from({ length: 2 }).map(() => (
+          <Stack direction="column" spacing={1}>
+            <Skeleton width="30%" sx={{ fontSize: (t) => t.typography.h6 }} />
+            <Skeleton variant="rounded" width="100%" height="6rem" />
+            {Array.from({ length: 5 }).map(() => (
+              <Stack direction="row" gap={2}>
+                <Skeleton variant="rounded" width="30%" height="1.5rem" />
+                <Skeleton variant="rounded" width="40%" height="1.5rem" />
+              </Stack>
+            ))}
+          </Stack>
+        ))}
+      </Stack>
     </Stack>
   );
 }

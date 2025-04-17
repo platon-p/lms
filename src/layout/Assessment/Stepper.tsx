@@ -1,3 +1,4 @@
+import { useQAStore } from "@/store/qa";
 import {
   Box,
   Skeleton,
@@ -10,13 +11,13 @@ import {
 
 export function StepperLayout({
   activeTab,
-  pagesData,
-  onNextStep,
+  onClick,
 }: {
   activeTab: number;
-  pagesData: { name: string; error?: boolean }[];
-  onNextStep: (i: number) => void;
+  onClick: (i: number) => void;
 }) {
+  const pages = useQAStore((s) => s.pages);
+
   return (
     <Stepper
       orientation="vertical"
@@ -24,16 +25,15 @@ export function StepperLayout({
       activeStep={activeTab}
       sx={{ height: "fit-content" }}
     >
-      {pagesData.map((v, i) => {
+      {pages.map((_, i) => {
+        const { isCompleted, name } = pages[i].getState();
         return (
-          <Step key={i} completed={false}>
+          <Step completed={isCompleted}>
             <StepButton
-              onClick={() => onNextStep(i)}
+              onClick={() => onClick(i)}
               sx={{ boxSizing: "border-box" }}
             >
-              <StepLabel sx={{ boxSizing: "border-box" }} error={v.error}>
-                {v.name}
-              </StepLabel>
+              <StepLabel sx={{ boxSizing: "border-box" }}>{name}</StepLabel>
             </StepButton>
           </Step>
         );
@@ -49,19 +49,24 @@ export function StepperSkeleton() {
       gap={1}
       paddingY={2}
       divider={
-        <Box
-          sx={{
-            paddingLeft: 1.5,
-          }}
-        >
+        <Box sx={{ paddingLeft: "15px" }}>
           <Box sx={{ borderLeft: "1px solid #ccc", minHeight: "1.5rem" }} />
         </Box>
       }
     >
       {Array.from({ length: 5 }).map(() => (
-        <Stack direction="row" spacing={2}>
-          <Skeleton variant="circular" width="2em" height="1.8em" />
-          <Skeleton variant="rounded" width="100%" height="2rem" />
+        <Stack direction="row" spacing={2} alignItems="center">
+          <Skeleton
+            variant="circular"
+            width={24}
+            height={24}
+            sx={{ flexShrink: 0 }}
+          />
+          <Skeleton
+            variant="rounded"
+            width="100%"
+            sx={{ height: (t) => t.spacing(2) }}
+          />
         </Stack>
       ))}
     </Stack>

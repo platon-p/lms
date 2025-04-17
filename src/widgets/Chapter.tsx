@@ -1,5 +1,5 @@
 import { Chapter } from "@/domain/course";
-import { ArrowDropDown } from "@mui/icons-material";
+import ArrowDropDown from "@mui/icons-material/ArrowDropDown";
 import {
   Accordion,
   AccordionDetails,
@@ -10,17 +10,26 @@ import {
 } from "@mui/material";
 import UnitListItem from "./UnitListItem";
 
-export default function ChapterView(props: Chapter) {
+export default function ChapterView({
+  chapter,
+  onUnitClick,
+}: {
+  chapter: Chapter;
+  onUnitClick: (unitId: string) => void;
+}) {
   return (
     <Accordion disableGutters defaultExpanded elevation={0}>
       <AccordionSummary expandIcon={<ArrowDropDown />}>
-        <Typography variant="h5">{props.name}</Typography>
+        <Typography variant="h5">{chapter.name}</Typography>
       </AccordionSummary>
       <AccordionDetails>
         <Stack direction="column" spacing={1}>
-          {props.units.map((unit) => {
-            return <UnitListItem {...unit} />;
-          })}
+          {chapter.units.map((unit) => (
+            <UnitListItem
+              unitHeader={unit}
+              onClick={() => onUnitClick(unit.id)}
+            />
+          ))}
         </Stack>
       </AccordionDetails>
     </Accordion>
@@ -29,7 +38,7 @@ export default function ChapterView(props: Chapter) {
 
 export function ChapterSkeleton() {
   return (
-    <Stack direction="column" spacing={1}>
+    <Stack direction="column" gap={1}>
       <Skeleton variant="text" width="40%" height="2rem" />
       <Skeleton variant="rectangular" width="100%" height="3rem" />
       <Skeleton variant="rectangular" width="100%" height="3rem" />

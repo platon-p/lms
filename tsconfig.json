@@ -1,9 +1,10 @@
 {
   "files": [],
   "compilerOptions": {
+    "types": ["node"],
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
   },
   "references": [
     {

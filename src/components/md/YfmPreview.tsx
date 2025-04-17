@@ -19,7 +19,7 @@ function getTransformConfig(): TransformOptions {
 const config = getTransformConfig();
 const YfmViewer = withLatex({ runtime: "latex" })(YfmStaticView);
 
-export function YfmPreview(props: { value: string }) {
+export default function YfmPreview(props: { value: string }) {
   const [html, setHtml] = useState<string>("");
   const [meta, setMeta] = useState<object | undefined>();
   const divRef = useRef<HTMLDivElement>(null);

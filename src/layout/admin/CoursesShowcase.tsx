@@ -1,0 +1,113 @@
+import { adminApi } from "@/api/admin";
+import { CourseHeader } from "@/domain/course";
+import { CardsShowcase } from "@/layout/common/CardsShowcase";
+import CourseItem, { CourseItemSkeleton } from "@/widgets/CourseItem";
+import Add from "@mui/icons-material/Add";
+import ArrowDropDown from "@mui/icons-material/ArrowDropDown";
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Autocomplete,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Skeleton,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
+import { useEffect, useState } from "react";
+
+export function CoursesShowcase() {
+  const [courses, setCourses] = useState<CourseHeader[]>();
+  const [totalCount, setTotalCount] = useState<number>();
+  const onCreateCourseClick = () => {
+    setDialogOpen(true);
+  };
+
+  useEffect(() => {
+    adminApi.getCourses().then((v) => {
+      setCourses(v.courses);
+      setTotalCount(v.count);
+    });
+  }, []);
+
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const onDialogClose = () => setDialogOpen(false);
+
+  return (
+    <>
+      <CreateCourseDialog open={dialogOpen} onClose={onDialogClose} />
+
+      <Accordion defaultExpanded>
+        <AccordionSummary expandIcon={<ArrowDropDown />}>
+          <Stack direction="row" gap={4}>
+            <Typography variant="h4">Курсы</Typography>
+            {totalCount ? (
+              <Typography
+                variant="h5"
+                color="text.secondary"
+                alignContent="center"
+              >
+                {totalCount}
+              </Typography>
+            ) : (
+              <Skeleton width={25} />
+            )}
+          </Stack>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Stack direction="row" gap={2} my={2}>
+            <TextField fullWidth label="Найти курс" />
+            <Button
+              variant="contained"
+              startIcon={<Add />}
+              sx={{ flexShrink: 0 }}
+              onClick={onCreateCourseClick}
+            >
+              Создать
+            </Button>
+          </Stack>
+          <CardsShowcase
+            size={{ xs: 12, sm: 6, md: 4 }}
+            cards={
+              courses
+                ? courses.map((v) => <CourseItem {...v} />)
+                : Array.from({ length: 5 }).map(() => <CourseItemSkeleton />)
+            }
+          />
+        </AccordionDetails>
+      </Accordion>
+    </>
+  );
+}
+
+function CreateCourseDialog(props: { open: boolean; onClose?: () => void }) {
+  return (
+    <Dialog open={props.open} onClose={props.onClose}>
+      <DialogTitle>Создать курс</DialogTitle>
+      <DialogContent>
+        <Stack gap={1} py={1} sx={{ minWidth: "25rem" }}>
+          <TextField required label="Название курса" />
+          <TeacherPicker />
+        </Stack>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={props.onClose}>Отмена</Button>
+        <Button variant="outlined">Создать</Button>
+      </DialogActions>
+    </Dialog>
+  );
+}
+
+function TeacherPicker() {
+  return (
+    <Autocomplete
+      renderInput={(params) => <TextField {...params} label="Преподаватель" />}
+      options={["asd", "asdasd", "asdasdd"]}
+    />
+  );
+}

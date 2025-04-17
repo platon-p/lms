@@ -1,4 +1,4 @@
-export type QAStatus = "done" | "in-progress";
+export type QAStatus = "done" | "in-progress" | "not-started";
 
 export interface QAWaveHeader {
   id: string;

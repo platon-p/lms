@@ -1,27 +1,23 @@
-import { mockLoadCourse } from "@/data/mock";
-import { Course } from "@/domain/course";
-import { CourseContentSkeleton, CourseContentView } from "@/layout/CourseContent";
 import { default as CourseLayout } from "@/layout/student/Course";
 import {
-  Container,
-  Paper
-} from "@mui/material";
-import { useEffect, useState } from "react";
-import { useParams } from "react-router";
+  CourseContentSkeleton,
+  CourseContentView,
+} from "@/layout/student/CourseContent";
+import { useCourse } from "@/store/unit";
+import { Container, Paper } from "@mui/material";
+import { useNavigate, useParams } from "react-router";
 
-export default function CoursePage() {
-  const { id } = useParams();
-  const [course, setCourse] = useState<Course | undefined>();
-  useEffect(() => {
-    mockLoadCourse().then(setCourse);
-  }, [id]);
+export default function Course() {
+  const { courseId } = useParams();
+  const course = useCourse(courseId!);
+
+  const navigate = useNavigate();
+  const onUnitClick = (unitId: string) => {
+    navigate(`./${unitId}`);
+  };
 
   return (
-    <CourseLayout
-      sideBarProps={
-        course?.chapters && { chapters: course.chapters, selectedId: 0 }
-      }
-    >
+    <CourseLayout courseId={courseId!} onUnitClick={onUnitClick}>
       <Container maxWidth="md">
         <Paper elevation={2}>
           {course ? (

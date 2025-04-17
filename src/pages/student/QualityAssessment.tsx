@@ -1,79 +1,71 @@
 import {
-  mockQualityAssessmentPages,
-  QualityAssessmentPageHeader,
-} from "@/data/mock";
-import {
   QualityAssessmentPage,
   QualityAssessmentPageSkeleton,
 } from "@/layout/Assessment/QualityAssessmentPage";
 import { StepperLayout, StepperSkeleton } from "@/layout/Assessment/Stepper";
-import { Check } from "@mui/icons-material";
+import { useQAStore } from "@/store/qa";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import { Box, Fab, Stack } from "@mui/material";
-import { useEffect, useState } from "react";
+import Check from "@mui/icons-material/Check";
+import { Box, Container, Fab, Stack } from "@mui/material";
+import { useEffect } from "react";
 
 export default function QualityAssessment() {
-  const [pagesData, setPagesData] = useState<
-    (QualityAssessmentPageHeader & { error: boolean })[] | undefined
-  >();
+  const init = useQAStore((s) => s.init);
+  const {
+    pages,
+    activeIndex,
+    state,
+    nextPage,
+    setActiveIndex,
+    isCompleted,
+    validate,
+  } = useQAStore();
   useEffect(() => {
-    mockQualityAssessmentPages().then((v) => {
-      setPagesData(
-        v.map((v) => ({
-          ...v,
-          error: false,
-        })),
-      );
-    });
-  }, []);
+    init();
+  }, [init]);
 
-  const [activeTab, setActiveTab] = useState(0);
-  function onNextStep(i: number) {
-    setActiveTab(i);
-  }
-  function onFabClick() {
-    if (!pagesData) return;
-    setActiveTab(activeTab + 1 === pagesData.length ? 0 : activeTab + 1);
-  }
+  useEffect(() => {
+    setInterval(() => {
+      validate();
+    }, 300);
+  }, [validate]);
+
+  const onFabClick = () => {
+    if (state === "loading") return;
+    if (!isCompleted) nextPage();
+    else {
+      console.log("submit");
+    }
+  };
 
   return (
-    <Stack direction="row" maxWidth="md" marginX="auto" spacing={2}>
-      <Box sx={{ minWidth: "12rem", width: "20%" }}>
-        {pagesData ? (
-          <StepperLayout
-            onNextStep={onNextStep}
-            activeTab={activeTab}
-            pagesData={pagesData}
-          />
-        ) : (
-          <StepperSkeleton />
-        )}
-      </Box>
-      <Box width="80%">
-        {pagesData ? (
-          pagesData.map((v, i) => {
-            return (
-              <QualityAssessmentPage
-                blocks={v.questions}
-                title={v.name}
-                active={activeTab === i}
-              />
-            );
-          })
-        ) : (
-          <QualityAssessmentPageSkeleton />
-        )}
-
-        <Box sx={{ display: "flex", justifyContent: "right" }}>
-          <Fab color="primary" onClick={onFabClick}>
-            {pagesData && activeTab === pagesData.length - 1 ? (
-              <Check />
-            ) : (
-              <ArrowForwardIcon />
-            )}
-          </Fab>
+    <Container maxWidth="md">
+      <Stack direction="row" gap={2}>
+        <Box minWidth="12rem" width="20%">
+          {state === "loaded" ? (
+            <StepperLayout onClick={setActiveIndex} activeTab={activeIndex} />
+          ) : (
+            <StepperSkeleton />
+          )}
         </Box>
-      </Box>
-    </Stack>
+        <Box width="80%">
+          {state === "loaded" ? (
+            pages.map((_, i) => <QualityAssessmentPage index={i} />)
+          ) : (
+            <QualityAssessmentPageSkeleton />
+          )}
+
+          <Box sx={{ display: "flex", justifyContent: "right" }}>
+            <Fab color="primary" onClick={onFabClick}>
+              {state === "loaded" && isCompleted ? (
+                <Check />
+              ) : (
+                <ArrowForwardIcon />
+              )}
+            </Fab>
+          </Box>
+        </Box>
+      </Stack>
+    </Container>
   );
 }

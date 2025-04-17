@@ -1,6 +1,9 @@
 import { Grid2, Grid2Props } from "@mui/material";
 import { ReactNode } from "react";
-export function CardsShowcase(props: { size: Grid2Props["size"]; cards: ReactNode[] }) {
+export function CardsShowcase(props: {
+  size: Grid2Props["size"];
+  cards: ReactNode[];
+}) {
   return (
     <Grid2
       container

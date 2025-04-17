@@ -1,4 +1,6 @@
-import { Close, Menu } from "@mui/icons-material";
+import { useCourse } from "@/store/unit";
+import Close from "@mui/icons-material/Close";
+import Menu from "@mui/icons-material/Menu";
 import {
   AppBar,
   Box,
@@ -10,33 +12,32 @@ import {
   useTheme,
 } from "@mui/material";
 import { ReactNode, useState } from "react";
-import {
-  CourseSideBar,
-  CourseSideBarProps,
-  CourseSideBarSkeleton,
-} from "./CourseSideBar";
+import { CourseSideBar, CourseSideBarSkeleton } from "./CourseSideBar";
 import Header from "./Header";
 
 export default function CourseLayout(props: {
-  sideBarProps?: CourseSideBarProps;
-  children: ReactNode;
+  children?: ReactNode;
+  courseId: string;
+  onUnitClick?: (unitId: string) => void;
 }) {
-  const lessSm = useMediaQuery((theme) => theme.breakpoints.down("md"));
-
+  const course = useCourse(props.courseId);
   const [open, setOpen] = useState(false);
+
+  const lessSm = useMediaQuery((theme) => theme.breakpoints.down("md"));
   const backdropClick = () => {
     setOpen(false);
   };
-  const sideBar = props.sideBarProps ? (
-    <CourseSideBar {...props.sideBarProps} />
-  ) : (
-    <CourseSideBarSkeleton />
-  );
   const toggleSideBar = () => {
     if (lessSm) {
       setOpen(!open);
     }
   };
+  const sideBar = course ? (
+    <CourseSideBar onUnitClick={props.onUnitClick} chapters={course.chapters} />
+  ) : (
+    <CourseSideBarSkeleton />
+  );
+
   const w = useTheme().spacing(35);
   return (
     <Box sx={{ display: "flex" }}>
@@ -44,7 +45,7 @@ export default function CourseLayout(props: {
         position="fixed"
         sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
       >
-        <Header>
+        <Header maxWidth={false}>
           {lessSm && (
             <IconButton color="inherit" onClick={toggleSideBar}>
               {open ? <Close /> : <Menu />}

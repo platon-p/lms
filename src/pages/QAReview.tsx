@@ -9,7 +9,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Typography
+  Typography,
 } from "@mui/material";
 import { BarChart } from "@mui/x-charts";
 
@@ -26,7 +26,7 @@ export default function QAReview() {
   data.forEach((row) =>
     row.forEach((v, i) => {
       series[i][v - 1]++;
-    })
+    }),
   );
   return (
     <Container maxWidth="md">
@@ -44,7 +44,7 @@ export default function QAReview() {
           ]}
           yAxis={[{ data: ["1", "2", "3", "4", "5"] }]}
           height={400}
-          sx={{width: "100%"}}
+          sx={{ width: "100%" }}
         />
       </Box>
       <TableContainer>
@@ -70,7 +70,7 @@ export default function QAReview() {
       <Grid2 container spacing={2}>
         {comments.map((comment) => (
           <Grid2 size={6}>
-            <Paper sx={{p: 2}}>
+            <Paper sx={{ p: 2 }}>
               <Typography>{comment}</Typography>
             </Paper>
           </Grid2>

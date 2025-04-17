@@ -1,5 +1,6 @@
 import { Chapter } from "@/domain/course";
-import { ExpandLess, ExpandMore } from "@mui/icons-material";
+import ExpandLess from "@mui/icons-material/ExpandLess";
+import ExpandMore from "@mui/icons-material/ExpandMore";
 import {
   Collapse,
   IconButton,
@@ -14,6 +15,7 @@ import { useState } from "react";
 
 export interface CourseSideBarProps {
   chapters: Chapter[];
+  onUnitClick?: (unitId: string) => void;
   selectedId?: number;
 }
 
@@ -32,7 +34,11 @@ export function CourseSideBar(props: CourseSideBarProps) {
       </ListItem>
 
       {props.chapters.map((chapter, i) => (
-        <ChapterListItem chapter={chapter} selected={i === props.selectedId} />
+        <ChapterListItem
+          onUnitClick={props.onUnitClick}
+          chapter={chapter}
+          isSelected={i === props.selectedId}
+        />
       ))}
     </List>
   );
@@ -40,16 +46,19 @@ export function CourseSideBar(props: CourseSideBarProps) {
 
 function ChapterListItem({
   chapter,
-  selected,
+  isSelected,
+  onUnitClick,
 }: {
   chapter: Chapter;
-  selected: boolean;
+  isSelected: boolean;
+  onUnitClick?: (unitId: string) => void;
 }) {
   const [open, setOpen] = useState(true);
+
   return (
     <>
       <ListItem disablePadding>
-        <ListItemButton selected={selected}>
+        <ListItemButton selected={isSelected}>
           <ListItemText>{chapter.name}</ListItemText>
         </ListItemButton>
         <IconButton onClick={() => setOpen(!open)}>
@@ -63,8 +72,7 @@ function ChapterListItem({
               <ListItem disablePadding key={ii}>
                 <ListItemButton
                   sx={{ pl: 4 }}
-                  LinkComponent={"a"}
-                  href={`#${ii}`}
+                  onClick={() => onUnitClick?.(unit.id)}
                 >
                   <ListItemText primary={unit.title} />
                 </ListItemButton>

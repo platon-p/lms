@@ -1,31 +1,27 @@
+import { criterias, useQAStore } from "@/store/qa";
 import {
-  Box,
   Grid2 as Grid,
   Radio,
   Stack,
-  TextField,
   Tooltip,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
 
-export function ClassesAssessment(props: { question: string }) {
-  const qs = ["Ясность материала", "Ясность требований", "Коммуникация"];
-  return (
-    <Box>
-      <Typography variant="h6">{props.question}</Typography>
-      <TextField multiline fullWidth minRows={3} placeholder="Напишите отзыв" />
-      <Grid container>
-        {qs.map((v) => (
-          <RatingRow question={v} />
-        ))}
-      </Grid>
-    </Box>
-  );
-}
+export function RatingRow({
+  question,
+  pageId,
+}: {
+  question: (typeof criterias)[number];
+  pageId: number;
+}) {
+  const { criteriaValues, setCriteriaValue } = useQAStore((s) => s.pages)[
+    pageId
+  ]();
+  const value = criteriaValues[question];
+  const setValue = (value: number) => setCriteriaValue(question, value);
 
-function RatingRow({ question }: { question: string }) {
-  const [value, setValue] = useState<string | undefined>();
+  const tooltips = ["1", "2", "3", "4", "5"]; // TODO: text labels
+
   return (
     <>
       <Grid size={{ xs: 12, sm: 4 }}>
@@ -44,11 +40,11 @@ function RatingRow({ question }: { question: string }) {
         >
           {Array.from({ length: 5 }).map((_, i) => {
             return (
-              <Tooltip title={"Хорошо"}>
+              <Tooltip title={tooltips[i]}>
                 <Radio
-                  value={i.toString()}
-                  checked={value === i.toString()}
-                  onChange={(e) => setValue(e.target.value)}
+                  value={i}
+                  checked={value === i}
+                  onChange={(e) => setValue(Number.parseInt(e.target.value))}
                 />
               </Tooltip>
             );

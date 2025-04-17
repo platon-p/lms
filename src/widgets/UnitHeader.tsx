@@ -1,5 +1,5 @@
-import { TestUnitInfo } from "@/domain/unit";
-import { AccessTime } from "@mui/icons-material";
+import { UnitInfo } from "@/domain/unit";
+import AccessTime from "@mui/icons-material/AccessTime";
 import {
   Card,
   CardContent,
@@ -13,7 +13,7 @@ export default function UnitHeader({
   unit,
   children,
 }: {
-  unit: TestUnitInfo;
+  unit: UnitInfo;
   children?: React.ReactNode;
 }) {
   return (
@@ -21,17 +21,16 @@ export default function UnitHeader({
       <CardContent>
         <Stack divider={<Divider />} gap={2}>
           <Stack direction="column" spacing={2}>
-            <Typography variant="h4">{unit.title}</Typography>
-            <Chip
-              sx={{ width: "fit-content" }}
-              label={
-                <>
-                  Дедлайн:{" "}
-                  {unit.deadline ? unit.deadline.toString() : "не указан"}
-                </>
-              }
-              icon={<AccessTime />}
-            />
+            <Typography variant="h5">{unit.title}</Typography>
+            {unit.type === "quiz" && (
+              <Chip
+                sx={{ width: "fit-content" }}
+                label={`Дедлайн: ${
+                  unit.deadline ? unit.deadline.toString() : "не указан"
+                }`}
+                icon={<AccessTime />}
+              />
+            )}
           </Stack>
           {children}
         </Stack>

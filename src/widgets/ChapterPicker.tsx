@@ -1,15 +1,7 @@
-import {
-  Autocomplete,
-  Button,
-  createFilterOptions,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  TextField,
-} from "@mui/material";
+import { teacherApi } from "@/api";
+import { Autocomplete, createFilterOptions, TextField } from "@mui/material";
 import { useState } from "react";
+import CreateChapterDialog from "./CreateChapterDialog";
 
 interface MyType {
   inputValue?: string;
@@ -17,23 +9,24 @@ interface MyType {
 }
 const filter = createFilterOptions<MyType>();
 
-const initialChapters: MyType[] = ["Функции", "Множества", "Логика"].map(
-  (chapter) => ({
+const initialChapters: MyType[] = teacherApi
+  .getCourseChapters("")
+  .map((chapter) => ({
     title: chapter,
-  })
-);
+  }));
 
 export default function ChapterPicker() {
   const [value, setValue] = useState<MyType | null>(null);
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
   const handleChapterDialogSubmit = (
-    event: React.FormEvent<HTMLFormElement>
+    event: React.FormEvent<HTMLFormElement>,
   ) => {
     event.preventDefault();
     // setValue(value);
     handleClose();
   };
+  const [tmp, setTmp] = useState<string>("zob");
   return (
     <>
       <Autocomplete
@@ -45,6 +38,7 @@ export default function ChapterPicker() {
             return;
           }
           if (newValue.inputValue) {
+            setTmp(newValue.inputValue);
             setTimeout(() => {
               setOpen(true);
             });
@@ -77,23 +71,12 @@ export default function ChapterPicker() {
           <TextField {...props} sx={{ minWidth: "14rem" }} label="Глава" />
         )}
       />
-      <Dialog open={open} onClose={handleClose}>
-        <form onSubmit={handleChapterDialogSubmit}>
-          <DialogTitle>Создание главы</DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              Глава с именем "имя" будет добавлена в конец списка глав текущего
-              курса
-            </DialogContentText>
-            <DialogActions>
-              <Button>Отмена</Button>
-              <Button variant="contained" type="submit">
-                Создать
-              </Button>
-            </DialogActions>
-          </DialogContent>
-        </form>
-      </Dialog>
+      <CreateChapterDialog
+        open={open}
+        initialValue={tmp}
+        onClose={handleClose}
+        onSubmit={handleChapterDialogSubmit}
+      />
     </>
   );
 }
