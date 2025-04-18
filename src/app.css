@@ -1,0 +1,6 @@
+body {
+  margin: 0;
+}
+.g-root_theme_light {
+  --g-color-base-background: #fafafa;
+}
