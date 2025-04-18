@@ -6,16 +6,31 @@ import {
   wysiwygToolbarConfigs,
 } from "@gravity-ui/markdown-editor";
 import { Box } from "@mui/material";
+import { useEffect } from "react";
 import { getEditorConfig } from "./mdPreferences";
 
 export default function YfmEditor(props: {
   label?: string;
   className?: string;
+  value?: string;
+  onChange?: (value: string) => void;
 }) {
   const wtcfg = [...wysiwygToolbarConfigs.wToolbarConfig];
   wtcfg.push([wMathListItem]);
+  const { onChange } = props;
 
   const editor = useMarkdownEditor(getEditorConfig(props.label));
+
+  useEffect(() => {
+    const listener = () => {
+      onChange?.(editor.getValue());
+    };
+    editor.on("change", listener);
+    return () => {
+      editor.off("change", listener);
+    };
+  }, [editor, onChange]);
+
   return (
     <Box
       sx={{

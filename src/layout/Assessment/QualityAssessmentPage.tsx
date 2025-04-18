@@ -51,11 +51,9 @@ export function QualityAssessmentPage(props: { index: number }) {
 export function QualityAssessmentPageSkeleton() {
   return (
     <Stack direction="column">
-      <Skeleton
-        variant="text"
-        width="50%"
-        sx={{ fontSize: (t) => t.typography.h4 }}
-      />
+      <Typography variant="h4" sx={{ width: "100%" }}>
+        <Skeleton width="50%" />
+      </Typography>
       <Stack direction="column" divider={<Divider />} spacing={2}>
         {Array.from({ length: 2 }).map(() => (
           <Stack direction="column" spacing={1}>

@@ -18,11 +18,15 @@ const components = {
   checkbox: CheckboxBuilder,
   radio: RadioBuilder,
   advanced: AdvancedBuilder,
-} satisfies Record<TaskType, React.FC<{ store: UseBoundStore<StoreApi<any>> }>>;
+} satisfies Record<
+  TaskType,
+  React.FC<{ store: UseBoundStore<StoreApi<never>> }>
+>;
 
 export default function TaskBuilder(props: { index: number }) {
   const state = useQuizBuilderStore((s) => s.tasks)[props.index];
-  const Component = components[state.getState().type];
+  const { type, title, setTitle } = state();
+  const Component = components[type];
 
   return (
     <Paper elevation={4} sx={{ width: "100%" }}>
@@ -35,8 +39,12 @@ export default function TaskBuilder(props: { index: number }) {
       >
         <QuestionControls index={props.index} />
         <Stack direction="column" sx={{ width: "100%" }} gap={2}>
-          <YfmEditor label="Текст задания" />
-          {/* @ts-ignore */}
+          <YfmEditor
+            label="Текст задания"
+            value={title}
+            onChange={(v) => setTitle(v)}
+          />
+          {/* @ts-expect-error maybe type unmatch*/}
           <Component store={state} />
         </Stack>
       </Stack>

@@ -1,4 +1,4 @@
-FROM node:slim as builder
+FROM node:slim AS builder
 COPY package.json .
 RUN npm i
 COPY . .

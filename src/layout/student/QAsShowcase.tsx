@@ -1,4 +1,5 @@
-import { mockLoadQAsShowcase } from "@/data/student";
+import { studentApi } from "@/api";
+import { PendingQAWaveHeader } from "@/domain/qa";
 import {
   Button,
   Card,
@@ -13,11 +14,9 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 
 export default function QAsShowcase() {
-  const [showcase, setShowcase] = useState<
-    { title: string; beginDate: Date; endDate: Date }[] | undefined
-  >();
+  const [showcase, setShowcase] = useState<PendingQAWaveHeader[]>();
   useEffect(() => {
-    mockLoadQAsShowcase().then(setShowcase);
+    studentApi.getPendingQAWaves().then(setShowcase);
   }, []);
   return (
     <Stack direction="column" spacing={1}>

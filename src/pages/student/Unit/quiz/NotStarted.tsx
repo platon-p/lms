@@ -1,12 +1,17 @@
 import { QuizUnitInfo } from "@/domain/unit";
 import UnitHeader from "@/widgets/UnitHeader";
 import { Box, Button, Stack, Typography } from "@mui/material";
+import { useNavigate } from "react-router";
 
 export default function QuizNotStarted({ unit }: { unit: QuizUnitInfo }) {
+  const navigate = useNavigate();
+  const onClick = () => {
+    navigate(`../quiz22in-progress`); // FIXME:
+  };
   return (
     <Box
       sx={{
-        maxWidth: "sm",
+        maxWidth: "md",
         mx: "auto",
         px: 2,
       }}
@@ -22,6 +27,7 @@ export default function QuizNotStarted({ unit }: { unit: QuizUnitInfo }) {
           <Button
             variant="contained"
             sx={{ width: "fit-content", marginLeft: "100%" }}
+            onClick={onClick}
           >
             Начать
           </Button>

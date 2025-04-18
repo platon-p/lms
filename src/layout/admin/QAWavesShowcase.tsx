@@ -1,15 +1,13 @@
-import { AdminApi, adminApi } from "@/api/admin";
+import { adminApi } from "@/api/admin";
+import { QAWaveHeader } from "@/domain/qa";
+import QAWaveCard from "@/widgets/QAWaveCard";
 import Add from "@mui/icons-material/Add";
 import ArrowDropDown from "@mui/icons-material/ArrowDropDown";
 import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
-  Box,
   Button,
-  Card,
-  CardActionArea,
-  CardContent,
   Skeleton,
   Stack,
   TextField,
@@ -21,20 +19,19 @@ import { CardsShowcase } from "../common/CardsShowcase";
 
 export function QABlock() {
   const [totalCount, setTotalCount] = useState<number>(10);
+  const [wavesData, setWavesData] = useState<QAWaveHeader[]>();
+  const [query, setQuery] = useState<string>("");
+
   const navigate = useNavigate();
-  const onCreateQAWaveClick = () => {
-    navigate("./qa/create");
-  };
+  const onCreateQAWaveClick = () => navigate("./qa/create");
+  const onWaveClick = (id: string) => navigate(`./qa/${id}`);
 
   useEffect(() => {
-    adminApi.getQaWaves().then((v) => {
+    adminApi.findQaWaves(query).then((v) => {
       setWavesData(v.waves);
       setTotalCount(v.count);
     });
-  }, []);
-
-  const [wavesData, setWavesData] =
-    useState<Awaited<ReturnType<AdminApi["getQaWaves"]>>["waves"]>();
+  }, [query]);
 
   return (
     <>
@@ -53,7 +50,12 @@ export function QABlock() {
         </AccordionSummary>
         <AccordionDetails>
           <Stack direction="row" gap={2} my={2}>
-            <TextField fullWidth label="Найти волну" />
+            <TextField
+              fullWidth
+              label="Найти волну"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+            />
             <Button
               variant="contained"
               startIcon={<Add />}
@@ -67,7 +69,9 @@ export function QABlock() {
             size={{ xs: 12, sm: 6, md: 6 }}
             cards={
               wavesData
-                ? wavesData.map((v) => <QAWaveCard {...v} />)
+                ? wavesData.map((v) => (
+                    <QAWaveCard wave={v} onClick={() => onWaveClick(v.id)} />
+                  ))
                 : Array.from({ length: 3 }).map(() => (
                     <Skeleton variant="rounded" sx={{ height: 80 }} />
                   ))
@@ -76,34 +80,5 @@ export function QABlock() {
         </AccordionDetails>
       </Accordion>
     </>
-  );
-}
-
-function QAWaveCard(props: { title: string; beginDate: Date; endDate: Date }) {
-  return (
-    <Card>
-      <CardActionArea>
-        <CardContent>
-          <Stack height={70} direction="column" justifyContent="space-between">
-            <Box
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-            >
-              <Typography display="inline-block" variant="h6">
-                {props.title}
-              </Typography>
-            </Box>
-            <Typography
-              display="inline-block"
-              variant="subtitle2"
-              color="text.secondary"
-            >
-              {props.beginDate.toDateString()} - {props.endDate.toDateString()}
-            </Typography>
-          </Stack>
-        </CardContent>
-      </CardActionArea>
-    </Card>
   );
 }

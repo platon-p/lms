@@ -3,7 +3,7 @@ import { StudentQuizReport } from "@/domain/review";
 import SolutionReview from "@/widgets/task/review/Solution";
 import { Button, Container, Stack, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 
 export default function ReviewByStudent() {
   const { courseId, unitId, studentId } = useParams();
@@ -16,13 +16,19 @@ export default function ReviewByStudent() {
       .getQuizReportByStudent(courseId!, unitId!, studentId!)
       .then(setReport);
   }, [courseId, unitId, studentId]);
-
+  const navigate = useNavigate();
+  const onSubmit = () => {
+    navigate("../");
+  };
   return (
     <Container maxWidth="md">
       <Stack direction="column" gap={2}>
         <Typography variant="h4">{studentName}</Typography>
-        {report?.solutions?.map((v) => <SolutionReview report={v} />)}
-        {report && <Controls total={report?.total} />}
+        {report?.solutions?.map((v) => (
+          <SolutionReview report={v} />
+        ))}
+        {report && <Controls total={report.total!} onSubmit={onSubmit} />}{" "}
+        {/* FIXME: */}
       </Stack>
     </Container>
   );

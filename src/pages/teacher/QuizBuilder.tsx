@@ -20,7 +20,7 @@ export default function QuizBuilder() {
   const { tasks, onAdd } = useQuizBuilderStore(); // FIXME: loosing states while reordering
   return (
     <Container maxWidth="lg">
-      <Stack direction="column" spacing={2}>
+      <Stack direction="column" spacing={2} my={2}>
         <UnitBuilderHeader />
         {tasks.map((_, index) => (
           <TaskBuilder index={index} />

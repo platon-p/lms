@@ -3,7 +3,7 @@ import {
   StudentQuizReportPreview,
 } from "@/domain/review";
 import { QuizUnitInfo } from "@/domain/unit";
-import { Delete, QuestionAnswer } from "@mui/icons-material";
+import { Delete, Visibility } from "@mui/icons-material";
 import Check from "@mui/icons-material/Check";
 import Close from "@mui/icons-material/Close";
 import {
@@ -41,7 +41,7 @@ export default function QuizReview({ unit }: { unit: QuizUnitInfo }) {
 
   return (
     <Container maxWidth="lg">
-      <Stack direction="column" gap={2}>
+      <Stack direction="column" gap={2} my={2}>
         <UnitReviewControls title={unit.title} />
         <StudentsReport onStudentReviewClick={onStudentReviewClick} />
       </Stack>
@@ -53,10 +53,18 @@ function UnitReviewControls(props: { title: string }) {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const onDeleteDialogOpen = () => setDeleteDialogOpen(false);
   const onDeleteClick = () => setDeleteDialogOpen(true);
+  const navigate = useNavigate();
+  const onDeleteSubmit = () => {
+    navigate("../");
+  };
 
   return (
     <Stack direction="row">
-      <DeleteUnitDialog open={deleteDialogOpen} onClose={onDeleteDialogOpen} />
+      <DeleteUnitDialog
+        open={deleteDialogOpen}
+        onClose={onDeleteDialogOpen}
+        onSubmit={onDeleteSubmit}
+      />
       <Typography sx={{ flexGrow: 1 }} variant="h4">
         {props.title}
       </Typography>
@@ -98,12 +106,47 @@ const doFilter = (data: StudentQuizReportPreview[], query: string) =>
     keys: ["student.name"],
   });
 
-const initialReports = Array.from({ length: 50 }).map((_, i) => ({
-  student: { id: "id", name: `Student ${i}` },
-  solutions: [{ id: 1, correct: true }, { id: 2, correct: false }, { id: 3 }],
-  status: "in-progress",
-  total: 10,
-})) satisfies StudentQuizReportPreview[];
+const initialReports = [
+  ...Array.from({ length: 5 }).map(
+    (_, i) =>
+      ({
+        student: { id: "id", name: `Student-review ${i}` },
+        status: "reviewing",
+        solutions: [
+          { id: 1, correct: true },
+          { id: 2, correct: false },
+          { id: 3 },
+        ],
+      } satisfies StudentQuizReportPreview)
+  ),
+  ...Array.from({ length: 5 }).map(
+    (_, i) =>
+      ({
+        student: { id: "id", name: `Student-not-started ${i}` },
+        status: "not-started",
+      } satisfies StudentQuizReportPreview)
+  ),
+  ...Array.from({ length: 5 }).map(
+    (_, i) =>
+      ({
+        student: { id: "id", name: `Student-done ${i}` },
+        solutions: [
+          { id: 1, correct: true },
+          { id: 2, correct: i % 2 === 0 },
+          { id: 3, correct: i % 3 !== 0 },
+        ],
+        status: "finished",
+        total: 1 + Number(i % 2 === 0) + Number(Boolean(i % 3 !== 0)),
+      } satisfies StudentQuizReportPreview)
+  ),
+  ...Array.from({ length: 5 }).map(
+    (_, i) =>
+      ({
+        student: { id: "id", name: `Student-progress ${i}` },
+        status: "in-progress",
+      } satisfies StudentQuizReportPreview)
+  ),
+];
 
 const fullReport: AllStudentsQuizReport = {
   tasks: [1, 2, 3],
@@ -128,7 +171,7 @@ function StudentsReport(props: {
   onStudentReviewClick: (studentId: string) => void;
 }) {
   const [reports, setReports] = useState<StudentQuizReportPreview[]>(
-    fullReport.reports,
+    fullReport.reports
   );
   const [searchValue, setSearchValue] = useState<string>("");
 
@@ -160,7 +203,7 @@ function StudentsReport(props: {
               {fullReport.tasks.map((v) => (
                 <TableCell align="center" onClick={() => onTaskIdClick(v)}>
                   <Tooltip title="Отчёт по заданию" placement="top">
-                    <Button sx={{}}>#{v}</Button>
+                    <Button>#{v}</Button>
                   </Tooltip>
                 </TableCell>
               ))}
@@ -202,7 +245,7 @@ function ReportRow({
           size="medium"
         />
       </TableCell>
-      <TableCell>{report.total}</TableCell>
+      <TableCell>{report.total ?? "N/A"}</TableCell>
       {fullReport.tasks.map((v, i) => {
         const row = report.solutions?.[i];
 
@@ -215,7 +258,9 @@ function ReportRow({
             ) : row!.correct === false ? (
               <Close color="error" />
             ) : (
-              <QuestionAnswer color="disabled" />
+              <Tooltip title="Нужно проверить">
+                <Visibility color="primary" />
+              </Tooltip>
             )}
           </TableCell>
         );

@@ -1,11 +1,12 @@
-import { sleepAndReturn } from "@/data/mock";
+import { CourseHeader } from "@/domain/course";
 import { StudentQuizReport } from "@/domain/review";
 import { UnitInfo } from "@/domain/unit";
+import { sleepAndReturn } from "./common";
 
 const quizReportByStudent = {
   student: {
     id: "id",
-    name: "Образцов Пример Показович",
+    name: "Образцов Показ Примерович",
   },
   status: "reviewing",
   solutions: [
@@ -48,26 +49,54 @@ const quizReportByStudent = {
 } satisfies StudentQuizReport;
 
 export class TeacherApi {
+  async getCourses(): Promise<CourseHeader[]> {
+    return [
+      { id: "algos1", title: "Алгоритмы и структуры данных-1" },
+      { id: "algos2", title: "Алгоритмы и структуры данных-2" },
+    ];
+  }
+
   async getQuizReportByStudent(
-    courseId: string,
-    unitId: string,
-    studentId: string
+    courseId: string /* eslint-disable-line @typescript-eslint/no-unused-vars */,
+    unitId: string /* eslint-disable-line @typescript-eslint/no-unused-vars */,
+    studentId: string /* eslint-disable-line @typescript-eslint/no-unused-vars */
   ): Promise<StudentQuizReport> {
     return sleepAndReturn(quizReportByStudent, 1000);
   }
 
-  async getQuizReportByTask(courseId: string, unitId: string, taskId: string) {
+  async getQuizReportByTask(
+    courseId: string /* eslint-disable-line @typescript-eslint/no-unused-vars */,
+    unitId: string /* eslint-disable-line @typescript-eslint/no-unused-vars */,
+    taskId: string /* eslint-disable-line @typescript-eslint/no-unused-vars */
+  ) {
     throw new Error("Not implemented");
   }
 
-  async createChapter(courseId: string, chapterName: string): Promise<void> {
+  async createChapter(
+    courseId: string /* eslint-disable-line @typescript-eslint/no-unused-vars */,
+    chapterName: string /* eslint-disable-line @typescript-eslint/no-unused-vars */
+  ): Promise<void> {
     throw new Error("Not implemented");
   }
 
-  async createUnit(courseId: string, chapterId: string, unit: UnitInfo) {
+  async createUnit(
+    courseId: string /* eslint-disable-line @typescript-eslint/no-unused-vars */,
+    chapterId: string /* eslint-disable-line @typescript-eslint/no-unused-vars */,
+    unit: UnitInfo /* eslint-disable-line @typescript-eslint/no-unused-vars */
+  ) {
     throw new Error("Not implemented");
   }
-  getCourseChapters(courseId: string): string[] {
+
+  async removeUnit(
+    courseId: string /* eslint-disable-line @typescript-eslint/no-unused-vars */,
+    unitId: string /* eslint-disable-line @typescript-eslint/no-unused-vars */
+  ) {
+    throw new Error("Not implemented");
+  }
+
+  getCourseChapters(
+    courseId: string /* eslint-disable-line @typescript-eslint/no-unused-vars */
+  ): string[] {
     return ["Функции", "Множества", "Логика"]; // FIXME:
   }
 }

@@ -13,7 +13,7 @@ export default function Course() {
 
   const navigate = useNavigate();
   const onUnitClick = (unitId: string) => {
-    navigate(`./${unitId}`);
+    navigate(`./${unitId}`, { state: { courseId: course } }); // TODO:
   };
 
   return (

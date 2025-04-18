@@ -1,5 +1,5 @@
 import { useUnit } from "@/store/unit";
-import { Container, Paper, Skeleton, Stack } from "@mui/material";
+import { Container, Paper, Skeleton, Stack, Typography } from "@mui/material";
 import { useParams } from "react-router";
 import QuizReview from "./quiz/QuizReview";
 
@@ -21,8 +21,10 @@ export default function UnitReview() {
 function QuizSkeleton() {
   return (
     <Container>
-      <Stack gap={2}>
-        <Skeleton width="40%" sx={{ fontSize: (t) => t.typography.h4 }} />
+      <Stack gap={2} my={2}>
+        <Typography variant="h4" sx={{ width: "100%" }}>
+          <Skeleton width="40%" />
+        </Typography>
         <Skeleton width="100%" variant="rounded" sx={{ height: 60 }} />
         <Paper sx={{ p: 2 }}>
           <Stack direction="row" gap={2}>

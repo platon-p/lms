@@ -8,28 +8,20 @@ import {
   Container,
   Skeleton,
   Stack,
-  Typography,
+  Typography
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 
+// TODO: view comments
 export default function Finished({ unit }: { unit: UnitInfo }) {
   const { courseId, unitId } = useParams();
   const [report, setReport] = useState<StudentQuizReportPreview>();
   useEffect(() => {
     teacherApi
-      .getQuizReportByStudent(courseId!, unitId!, "TODO:")
+      .getQuizReportByStudent(courseId!, unitId!, "TODO:") // FIXME: teacherApi -> studentApi
       .then(setReport);
   }, [courseId, unitId]);
-  const totalSkeleton = (
-    <Skeleton
-      sx={{
-        display: "inline-block",
-        width: (t) => t.spacing(10),
-        fontSize: "1.5rem",
-      }}
-    />
-  );
   return (
     <Container maxWidth="md">
       <Stack gap={2}>
@@ -37,7 +29,15 @@ export default function Finished({ unit }: { unit: UnitInfo }) {
         <Card>
           <CardContent>
             <Typography>
-              Набрано баллов: {report?.total ?? totalSkeleton}
+              Набрано баллов:{" "}
+              {report?.total ?? (
+                <Skeleton
+                  sx={{
+                    display: "inline-block",
+                    width: 30,
+                  }}
+                />
+              )}
             </Typography>
           </CardContent>
         </Card>

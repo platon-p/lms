@@ -1,182 +1,132 @@
 import { adminApi } from "@/api/admin";
+import { CourseHeader } from "@/domain/course";
+import { Student } from "@/domain/profiles";
 import { QAWaveHeader } from "@/domain/qa";
-import TeacherChip from "@/widgets/TeacherChip";
-import AccessTime from "@mui/icons-material/AccessTime";
-import Done from "@mui/icons-material/Done";
-import Edit from "@mui/icons-material/Edit";
+import CourseMeta, { CourseMetaSkeleton } from "@/layout/admin/CourseMeta";
+import StudentsEditableList from "@/layout/admin/StudentsEditableList";
+import { CardsShowcase } from "@/layout/common/CardsShowcase";
+import QAWaveCard, { QAWaveItemSkeleton } from "@/widgets/QAWaveCard";
 import {
-  Autocomplete,
-  Badge,
-  Card,
-  CardActionArea,
-  CardContent,
-  Chip,
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
   Container,
-  Grid2,
-  IconButton,
+  Paper,
   Skeleton,
   Stack,
-  TextField,
-  Tooltip,
   Typography,
-  useTheme,
 } from "@mui/material";
 import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router";
 
 export default function AdminCourse() {
-  const title = "Алгоритмы";
-  const teacher = "Преподбек Училович";
+  const { courseId } = useParams();
+  const [course, setCourse] = useState<
+    CourseHeader & {
+      teacher: string;
+      qaWaves: QAWaveHeader[];
+      students: Student[];
+    }
+  >();
+
+  useEffect(() => {
+    adminApi.getCourse(courseId!).then(setCourse);
+  }, [courseId]);
+
+  const onStudentsSubmit = async (
+    created: Student[],
+    deleted: Student[]
+  ): Promise<Student[]> => {
+    // sleep 1000ms
+    if (!course) return [];
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    const newStudents = ((prev: Student[]) =>
+      prev.filter((s) => !deleted.includes(s)).concat(created))(
+      course.students
+    );
+    setCourse((prev) => ({
+      ...prev!,
+      students: newStudents,
+    }));
+    // TODO: update course 4real
+    return newStudents;
+  };
 
   return (
     <Container maxWidth="md">
       <Stack gap={2} py={2}>
-        <Stack
-          direction="row"
-          gap={2}
-          alignItems="center"
-          justifyContent="space-between"
-        >
-          <Typography
-            sx={{
-              px: 1,
-              mx: -1,
-              cursor: "pointer",
-              transitionDuration: "200ms",
-              "&:hover": { backgroundColor: "#f0f0f0", borderRadius: "4px" },
-            }}
-            variant="h3"
-          >
-            {title}
-          </Typography>
-          <Stack direction="row" gap={2} alignItems="center">
-            <Tooltip title="Преподаватель курса">
-              <TeacherChip name={teacher} />
-            </Tooltip>
-            <IconButton>
-              <Edit />
-            </IconButton>
-          </Stack>
-        </Stack>
-        <Typography variant="h4">Студенты</Typography>
-        <StudentsEditableList />
-        <Typography variant="h4">Результаты СОП</Typography>
-        <QAWaves />
+        {course ? <CourseMeta course={course} /> : <CourseMetaSkeleton />}
+        <Accordion defaultExpanded>
+          <AccordionSummary>
+            <Typography variant="h4">Студенты</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            {course?.students ? (
+              <StudentsEditableList
+                onSubmit={onStudentsSubmit}
+                studentsInitial={course.students}
+              />
+            ) : (
+              <StudentsEditableListSkeleton />
+            )}
+          </AccordionDetails>
+        </Accordion>
+        <Accordion defaultExpanded>
+          <AccordionSummary>
+            <Typography variant="h4">Результаты СОП</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <QAWaves qaWaves={course?.qaWaves} />
+          </AccordionDetails>
+        </Accordion>
       </Stack>
     </Container>
   );
 }
 
-function StudentsEditableList() {
-  /** @deprecated */
-  const allStudents = [
-    "Иванов Иван",
-    "Петров Пётр",
-    "asdasd",
-    "ddd",
-    "dasdasd",
-  ]; // TODO: migrate -> adminApi
-
-  const [completionValue, setCompletionValue] = useState<string | null>();
-  const [inputValue, setInputValue] = useState("");
-
-  const [students, setStudents] = useState(allStudents);
-  const addStudent = (name: string) => {
-    if (students.includes(name)) return;
-    setStudents([...students, name]);
-  };
-
+function StudentsEditableListSkeleton() {
   return (
-    <Card>
-      <CardContent>
-        <Stack gap={2}>
-          {/* FIXME: */}
-          <Autocomplete
-            autoHighlight
-            inputValue={inputValue}
-            onInputChange={(e, v) => setInputValue(v)}
-            value={completionValue}
-            onChange={(e, v) => {
-              if (!v) return;
-              addStudent(v);
-              setTimeout(() => {
-                setInputValue("");
-                setCompletionValue(null);
-              });
-            }}
-            renderInput={(params) => <TextField {...params} label="Студент" />}
-            options={allStudents}
+    <Stack gap={2}>
+      <Skeleton variant="rounded" height={50} width="100%" />
+      <Stack
+        direction="row"
+        gap={2}
+        sx={{ flexWrap: "wrap", rowGap: 1 }}
+        p={2}
+        component={(props) => <Paper {...props} p={2} variant="outlined" />}
+      >
+        {Array.from({ length: 3 }).map(() => (
+          <Skeleton
+            variant="rounded"
+            sx={{ borderRadius: 999 }}
+            height={30}
+            width={120}
           />
-          <Stack direction="row" gap={2} sx={{ flexWrap: "wrap", rowGap: 1 }}>
-            {students.map((v) => (
-              <Chip label={v} onDelete={() => {}} />
-            ))}
-          </Stack>
-        </Stack>
-      </CardContent>
-    </Card>
+        ))}
+      </Stack>
+    </Stack>
   );
 }
 
-function QAWaves() {
-  const [qaWaves, setQAWaves] = useState<QAWaveHeader[] | undefined>();
-  useEffect(() => {
-    adminApi.getQaWaves().then(setQAWaves);
-  }, []);
-  const item = (wave: QAWaveHeader) => {
-    return <QAWaveItem {...wave} />;
+function QAWaves({ qaWaves }: { qaWaves?: QAWaveHeader[] }) {
+  const navigate = useNavigate();
+  const { courseId } = useParams();
+  const onClick = (waveId: string) => {
+    if (qaWaves?.find((v) => v.id === waveId)?.status === "finished") {
+      navigate(`/admin/qa/${waveId}/course/${courseId}`); // FIXME:
+    }
   };
   return (
-    <Grid2 container spacing={2}>
-      {qaWaves
-        ? qaWaves.map((v) => <Grid2 size={6}>{item(v)}</Grid2>)
-        : Array.from({ length: 6 }).map(() => (
-            <Grid2 size={6}>
-              <QAWaveItemSkeleton />
-            </Grid2>
-          ))}
-    </Grid2>
-  );
-}
-
-function QAWaveItem(props: QAWaveHeader) {
-  return (
-    <Card>
-      <CardActionArea>
-        <CardContent>
-          <Stack
-            direction="row"
-            justifyContent="space-between"
-            alignItems="centerF"
-          >
-            <Typography>{props.title}</Typography>
-            <Badge>{props.status === "done" ? <Done /> : <AccessTime />}</Badge>
-          </Stack>
-        </CardContent>
-      </CardActionArea>
-    </Card>
-  );
-}
-
-function QAWaveItemSkeleton() {
-  const s = useTheme().spacing(4);
-  return (
-    <Card>
-      <CardActionArea>
-        <CardContent>
-          <Stack
-            direction="row"
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <Skeleton
-              variant="text"
-              width="70%"
-              sx={{ fontSize: (t) => t.typography.subtitle1 }}
-            />
-            <Skeleton variant="circular" height={s} width={s} />
-          </Stack>
-        </CardContent>
-      </CardActionArea>
-    </Card>
+    <CardsShowcase
+      emptyCaption="Нет прикреплённых волн СОП"
+      size={6}
+      cards={
+        qaWaves
+          ? qaWaves.map((v) => (
+              <QAWaveCard onClick={() => onClick(v.id)} wave={v} />
+            ))
+          : Array.from({ length: 4 }).map(() => <QAWaveItemSkeleton />)
+      }
+    />
   );
 }

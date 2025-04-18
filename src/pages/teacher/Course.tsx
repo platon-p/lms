@@ -11,7 +11,7 @@ export default function Course() {
   };
 
   return (
-    <CourseLayout courseId={courseId!}>
+    <CourseLayout courseId={courseId!} onUnitClick={onUnitClick}>
       <CourseContent courseId={courseId!} onUnitClick={onUnitClick} />
     </CourseLayout>
   );

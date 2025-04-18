@@ -1,4 +1,5 @@
-import { mockQualityAssessmentPages, QualityAssessmentPage } from "@/data/student";
+import { studentApi } from "@/api";
+import { QualityAssessmentPage } from "@/domain/qa";
 import { create, StoreApi, UseBoundStore } from "zustand";
 
 export const criterias = [
@@ -52,7 +53,7 @@ const createQAPage = (data: QualityAssessmentPage) =>
 
 export const useQAStore = create<QAStore>((set, get) => ({
   async init(): Promise<void> {
-    const pages = await mockQualityAssessmentPages();
+    const pages = await studentApi.getQAWaveContent("TODO:");
     set({ state: "loaded", pages: pages.map((v) => createQAPage(v)) });
   },
   state: "loading",

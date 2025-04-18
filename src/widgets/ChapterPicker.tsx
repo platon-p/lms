@@ -20,13 +20,13 @@ export default function ChapterPicker() {
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
   const handleChapterDialogSubmit = (
-    event: React.FormEvent<HTMLFormElement>,
+    event: React.FormEvent<HTMLFormElement>
   ) => {
     event.preventDefault();
-    // setValue(value);
+    setValue(value);
     handleClose();
   };
-  const [tmp, setTmp] = useState<string>("zob");
+  const [tmp, setTmp] = useState<string>("Новая глава"); // FIXME:
   return (
     <>
       <Autocomplete

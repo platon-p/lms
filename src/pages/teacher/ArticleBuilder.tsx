@@ -1,30 +1,34 @@
 import { YfmEditor } from "@/components";
 import UnitBuilderHeader from "@/widgets/UnitBuilderHeader";
-import { Box, Card, CardContent, Container, Stack } from "@mui/material";
+import { Box, Container, Stack } from "@mui/material";
+import { useState } from "react";
 
 export default function ArticleBuilder() {
   const submit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
   };
+  const [articleText, setAticleText] = useState<string>("");
+  console.log(articleText);
+
   return (
     <Container maxWidth="lg">
       <form onSubmit={submit}>
         <Stack direction="column" gap={2} py={2}>
-          <Card>
-            <CardContent>
-              <UnitBuilderHeader />
-            </CardContent>
-          </Card>
+          <UnitBuilderHeader />
 
           <Box
             sx={{
-              "& .asds": {
+              "& .my-md-editor": {
                 backgroundColor: "white",
                 minHeight: "50vh !important",
               },
             }}
           >
-            <YfmEditor className="asds" />
+            <YfmEditor
+              value={articleText}
+              onChange={(v) => setAticleText(v)}
+              className="my-md-editor"
+            />
           </Box>
         </Stack>
       </form>

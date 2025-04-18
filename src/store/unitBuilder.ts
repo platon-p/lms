@@ -2,17 +2,20 @@ import { TaskType } from "@/domain/quiz";
 import { create, StateCreator, StoreApi, UseBoundStore } from "zustand";
 
 export interface QuizUnitBuilderProps {
-  tasks: UseBoundStore<
-    StoreApi<CheckboxState | RadioState | TextState | AdvancedState>
-  >[];
+  tasks: UseBoundStore<StoreApi<BuilderStatePlus>>[];
   onAdd: (type: TaskType) => void;
   onDelete: (id: number) => void;
   onMoveUp: (id: number) => void;
   onMoveDown: (id: number) => void;
 }
 
-export interface CheckboxState {
+type BuilderState = CheckboxState | RadioState | TextState | AdvancedState;
+type BuilderStatePlus = BuilderState & {
   title: string;
+  setTitle(title: string): void;
+};
+
+export interface CheckboxState {
   type: "checkbox";
   options: { name: string; checked: boolean }[];
   add(): void;
@@ -21,7 +24,6 @@ export interface CheckboxState {
   remove(index: number): void;
 }
 export interface RadioState {
-  title: string;
   type: "radio";
   options: string[];
   activeId: number | null;
@@ -31,22 +33,18 @@ export interface RadioState {
   setText(index: number, value: string): void;
 }
 export interface TextState {
-  title: string;
   type: "text";
   value: string;
   setValue(newValue: string): void;
 }
 export interface AdvancedState {
-  title: string;
   type: "advanced";
 }
 
-const createAdvancedStore: StateCreator<AdvancedState> = (set) => ({
-  title: "",
+const createAdvancedStore: StateCreator<AdvancedState> = () => ({
   type: "advanced",
 });
 const createTextStore: StateCreator<TextState> = (set) => ({
-  title: "",
   type: "text",
   value: "",
   setValue(newValue: string) {
@@ -54,7 +52,6 @@ const createTextStore: StateCreator<TextState> = (set) => ({
   },
 });
 const createRadioState: StateCreator<RadioState> = (set, get) => ({
-  title: "",
   type: "radio",
   activeId: null,
   options: [],
@@ -79,7 +76,6 @@ const createRadioState: StateCreator<RadioState> = (set, get) => ({
   },
 });
 const createCheckboxState: StateCreator<CheckboxState> = (set, get) => ({
-  title: "",
   type: "checkbox",
   options: [],
   add() {
@@ -109,11 +105,18 @@ const constructors = {
   advanced: createAdvancedStore,
 };
 
+const build = (type: TaskType) =>
+  create<BuilderStatePlus>((set, get, rest) => ({
+    title: "",
+    setTitle: (title: string) => set({ title }),
+    // @ts-expect-error setter type maybe not match
+    ...constructors[type](set, get, rest),
+  }));
+
 export const useQuizBuilderStore = create<QuizUnitBuilderProps>((set, get) => ({
   tasks: [],
   onAdd: (type) => {
-    // @ts-ignore
-    set((state) => ({ tasks: [...state.tasks, create(constructors[type])] }));
+    set((state) => ({ tasks: [...state.tasks, build(type)] }));
   },
   onDelete: (id) => {
     set((state) => ({

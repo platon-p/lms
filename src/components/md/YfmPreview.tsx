@@ -5,7 +5,7 @@ import { OptionsType as TransformOptions } from "@diplodoc/transform/lib/typings
 import { YfmStaticView } from "@gravity-ui/markdown-editor";
 import { debounce } from "@gravity-ui/markdown-editor/_/lodash.js";
 import { withLatex } from "@gravity-ui/markdown-editor/view/hocs/withLatex/index.js";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 function getTransformConfig(): TransformOptions {
   return {
@@ -21,8 +21,8 @@ const YfmViewer = withLatex({ runtime: "latex" })(YfmStaticView);
 
 export default function YfmPreview(props: { value: string }) {
   const [html, setHtml] = useState<string>("");
-  const [meta, setMeta] = useState<object | undefined>();
-  const divRef = useRef<HTMLDivElement>(null);
+  const [meta, setMeta] = useState<object>();
+
   const render = useMemo(
     () =>
       debounce(() => {
@@ -36,5 +36,5 @@ export default function YfmPreview(props: { value: string }) {
     render();
   }, [render]);
 
-  return <YfmViewer html={html} ref={divRef} meta={meta} />;
+  return <YfmViewer html={html} meta={meta} />;
 }

@@ -1,9 +1,5 @@
+import { Student } from "./profiles";
 import { QuizStatus } from "./unit";
-
-interface Student {
-  id: string;
-  name: string;
-}
 
 export interface RadioSolutionReport {
   type: "radio";
@@ -50,7 +46,7 @@ export interface StudentQuizReport {
   student: Student;
   status: QuizStatus;
   solutions?: SolutionReport[];
-  total: number;
+  total?: number;
 }
 
 export type StudentQuizReportPreview = Omit<StudentQuizReport, "solutions"> & {

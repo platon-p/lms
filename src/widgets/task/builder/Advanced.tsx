@@ -2,7 +2,7 @@ import { AdvancedState } from "@/store/unitBuilder";
 import Alert from "@mui/material/Alert";
 import { StoreApi, UseBoundStore } from "zustand";
 
-export default function AdvancedBuilder(props: {
+export default function AdvancedBuilder(_: {
   store: UseBoundStore<StoreApi<AdvancedState>>;
 }) {
   return (

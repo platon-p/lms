@@ -17,9 +17,11 @@ import {
   Skeleton,
   Stack,
   TextField,
+  TextFieldProps,
   Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 
 export function CoursesShowcase() {
   const [courses, setCourses] = useState<CourseHeader[]>();
@@ -36,11 +38,21 @@ export function CoursesShowcase() {
   }, []);
 
   const [dialogOpen, setDialogOpen] = useState(false);
-  const onDialogClose = () => setDialogOpen(false);
-
+  const onDialogClose = () => {
+    setDialogOpen(false);
+  };
+  const navigate = useNavigate();
+  const onCreate = () => {
+    onDialogClose();
+    navigate("/admin", { state: { snackbar_text: "Курс создан" } });
+  };
   return (
     <>
-      <CreateCourseDialog open={dialogOpen} onClose={onDialogClose} />
+      <CreateCourseDialog
+        open={dialogOpen}
+        onClose={onDialogClose}
+        onSubmit={onCreate}
+      />
 
       <Accordion defaultExpanded>
         <AccordionSummary expandIcon={<ArrowDropDown />}>
@@ -85,29 +97,46 @@ export function CoursesShowcase() {
   );
 }
 
-function CreateCourseDialog(props: { open: boolean; onClose?: () => void }) {
+function CreateCourseDialog(props: {
+  open: boolean;
+  onClose?: () => void;
+  onSubmit?: (name: string, teacher: string) => void;
+}) {
   return (
     <Dialog open={props.open} onClose={props.onClose}>
       <DialogTitle>Создать курс</DialogTitle>
       <DialogContent>
         <Stack gap={1} py={1} sx={{ minWidth: "25rem" }}>
           <TextField required label="Название курса" />
-          <TeacherPicker />
+          <TeacherPicker textFieldProps={{ required: true }} />
         </Stack>
       </DialogContent>
       <DialogActions>
         <Button onClick={props.onClose}>Отмена</Button>
-        <Button variant="outlined">Создать</Button>
+        <Button
+          variant="outlined"
+          type="submit"
+          onClick={() => props.onSubmit?.("TODO:", "")}
+        >
+          Создать
+        </Button>
       </DialogActions>
     </Dialog>
   );
 }
 
-function TeacherPicker() {
+function TeacherPicker({
+  textFieldProps,
+}: {
+  textFieldProps?: TextFieldProps;
+}) {
+  const searchResults = ["Марья Ивановна", "Иван Петрович", "Василий Иванович"];
   return (
     <Autocomplete
-      renderInput={(params) => <TextField {...params} label="Преподаватель" />}
-      options={["asd", "asdasd", "asdasdd"]}
+      renderInput={(params) => (
+        <TextField {...params} {...textFieldProps} label="Преподаватель" />
+      )}
+      options={searchResults}
     />
   );
 }

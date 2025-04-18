@@ -3,6 +3,7 @@ import AdminCourse from "./Course";
 import CreateQAWave from "./CreateQAWave";
 import Main from "./Main";
 import QAWaveReview from "./QAWaveReview";
+import QAReview from "../QAReview";
 
 export const adminRoutes = [
   {
@@ -19,6 +20,9 @@ export const adminRoutes = [
   },
   {
     path: "qa/:qaWaveId",
-    Component: QAWaveReview,
+    children: [
+      { index: true, Component: QAWaveReview },
+      { path: "course/:courseId", Component: QAReview },
+    ],
   },
 ] as const satisfies RouteObject[];

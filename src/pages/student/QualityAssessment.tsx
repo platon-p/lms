@@ -8,6 +8,7 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import Check from "@mui/icons-material/Check";
 import { Box, Container, Fab, Stack } from "@mui/material";
 import { useEffect } from "react";
+import { useNavigate } from "react-router";
 
 export default function QualityAssessment() {
   const init = useQAStore((s) => s.init);
@@ -30,18 +31,20 @@ export default function QualityAssessment() {
     }, 300);
   }, [validate]);
 
+  const navigate = useNavigate();
+
   const onFabClick = () => {
     if (state === "loading") return;
     if (!isCompleted) nextPage();
     else {
-      console.log("submit");
+      navigate("../")
     }
   };
 
   return (
     <Container maxWidth="md">
       <Stack direction="row" gap={2}>
-        <Box minWidth="12rem" width="20%">
+        <Box minWidth="8rem" width="20%">
           {state === "loaded" ? (
             <StepperLayout onClick={setActiveIndex} activeTab={activeIndex} />
           ) : (

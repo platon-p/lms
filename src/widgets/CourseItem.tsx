@@ -9,17 +9,24 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router";
 
-export default function CourseItem(props: CourseHeader) {
+export default function CourseItem({
+  onClick,
+  ...course
+}: CourseHeader & {
+  onClick?: () => void;
+}) {
   const navigate = useNavigate();
-  const navCourse = () => {
-    navigate(`./course/${props.id}`);
-  };
+  const navCourse =
+    onClick ??
+    (() => {
+      navigate(`./course/${course.id}`);
+    });
   return (
     <Card>
       <CardActionArea onClick={navCourse}>
         <CardContent>
           <Stack height={60} direction="column" justifyContent="space-between">
-            <Typography variant="subtitle1">{props.title}</Typography>
+            <Typography variant="subtitle1">{course.title}</Typography>
           </Stack>
         </CardContent>
       </CardActionArea>

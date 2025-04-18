@@ -5,8 +5,10 @@ import QuizBuilder from "./QuizBuilder";
 import UnitReview from "./review/UnitReview";
 import ReviewByStudent from "./review/quiz/Student";
 import ReviewByTask from "./review/quiz/Task";
+import Main from "./Main";
 
 export const teacherRoutes = [
+  { index: true, Component: Main },
   {
     path: "course/:courseId",
     children: [
